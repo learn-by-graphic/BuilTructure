@@ -162,6 +162,7 @@ public class GridBuildingSystem : MonoBehaviour
         if (!temp || temp.Placed)
         {
             temp = Instantiate(building, new Vector3(0f, 0.5f, 0f), Quaternion.identity).GetComponent<Building>();
+            temp.name = temp.buildingName;
             FollowBuilding();
         }
         else
@@ -255,12 +256,12 @@ public class GridBuildingSystem : MonoBehaviour
         //Vector3Int cellPos = gridLayout.LocalToCell(touchPos); 
         // start / dst need to update by mouse input
 
-        Building start_building = GameObject.Find("start").GetComponent<Building>();
+        Building start_building = GameObject.Find("City Hall").GetComponent<Building>();
         BoundsInt start_pos = start_building.area;
         startPos = start_pos.position;
 
 
-        Building dst_building = GameObject.Find("dst").GetComponent<Building>();
+        Building dst_building = GameObject.Find("House").GetComponent<Building>();
         BoundsInt dst_pos = dst_building.area;
         targetPos = dst_pos.position;
 
