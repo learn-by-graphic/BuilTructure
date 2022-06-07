@@ -26,6 +26,7 @@ public class GridBuildingSystem : MonoBehaviour
     public bool allowDiagonal, dontCrossCorner;
 
     int sizeX, sizeY;
+    
     Node[,] NodeArray;
     Node StartNode, TargetNode, CurNode;
     List<Node> OpenList, ClosedList;
@@ -48,6 +49,7 @@ public class GridBuildingSystem : MonoBehaviour
         tileBases.Add(TileType.Red, Resources.Load<TileBase>(tilePath + "red2"));
         tileBases.Add(TileType.Road, Resources.Load<TileBase>(tilePath + "road2"));
         tileBases.Add(TileType.Black, Resources.Load<TileBase>(tilePath + "black2"));
+        tileBases.Add(TileType.Uroad, Resources.Load<TileBase>(tilePath + "uroad"));
         tileBases.Add(TileType.Transparency, Resources.Load<TileBase>(tilePath + "transparency"));
 
     }
@@ -93,8 +95,20 @@ public class GridBuildingSystem : MonoBehaviour
                 BoundsInt road = new BoundsInt(cellPos, size: new Vector3Int(1, 1, 1));
                 // 도로도 건물처럼 겹치게 깔리면 안되니까 그 처리가 필요함 
                 // 현재는 그냥 깔리기만 하는 상태
-                SetTilesBlock(road, TileType.Empty, TempTilemap);
-                SetTilesBlock(road, TileType.Road, MainTilemap);
+                TileBase[] baseArray = GetTilesBlock(road, MainTilemap);
+
+                if (baseArray[0] == tileBases[TileType.Road])
+                {
+                    //Debug.Log("user");
+                    SetTilesBlock(road, TileType.Transparency, MainTilemap);
+                    SetTilesBlock(road, TileType.Uroad, MainTilemap);
+                }
+
+                else
+                {
+                    SetTilesBlock(road, TileType.Empty, TempTilemap);
+                    SetTilesBlock(road, TileType.Road, MainTilemap);
+                }
             }
         }
         else if (Input.GetKeyDown(KeyCode.Space))
@@ -102,7 +116,7 @@ public class GridBuildingSystem : MonoBehaviour
             if (temp.CanBePlaced())
             {
                 temp.Place();
-                Debug.Log(temp.area);
+                //Debug.Log(temp.area);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
@@ -248,6 +262,7 @@ public class GridBuildingSystem : MonoBehaviour
 
     #region Pathfinding
 
+
     public void Settings()
     {
 
@@ -273,13 +288,36 @@ public class GridBuildingSystem : MonoBehaviour
         bottomLeft = new Vector3Int(-10, -10, 0);
         topRight = new Vector3Int(10, 10, 0);
 
-        Debug.Log("start : " + startPos);
-        Debug.Log("dst : " + targetPos);
-        PathFinding();
+        //Debug.Log("start : " + startPos);
+        //Debug.Log("dst : " + targetPos);
+        PathFinding(TileType.Road);
+    }
+    public void UPathFinding()
+    {
+        Building start_building = GameObject.Find("City Hall").GetComponent<Building>();
+        BoundsInt start_pos = start_building.area;
+        startPos = start_pos.position;
+
+
+        Building dst_building = GameObject.Find("House").GetComponent<Building>();
+        BoundsInt dst_pos = dst_building.area;
+        targetPos = dst_pos.position;
+
+
+        // 항상 전체 맵크기를 떠 올 수없음 
+        // 출발 과 도착지 에서 특정 벡터를 구하고 맵 범위를 지정하는 과정이 필요함
+        bottomLeft = new Vector3Int(-10, -10, 0);
+        topRight = new Vector3Int(10, 10, 0);
+
+        // 복붙 코드임 개선하면 코드 라인수 줄일 수 있을듯
+
+        PathFinding(TileType.Uroad);
     }
 
-    public void PathFinding()
+    public void PathFinding(TileType Tcolor)
     {
+        int move_check = 0;
+
         // NodeArray의 크기 정해주고, isWall, x, y 대입
         sizeX = topRight.x - bottomLeft.x + 1;
         sizeY = topRight.y - bottomLeft.y + 1;
@@ -295,7 +333,7 @@ public class GridBuildingSystem : MonoBehaviour
             {
                 bool isWall = true;
 
-                if (tiles[(j * sizeX) + i] == tileBases[TileType.Road])
+                if (tiles[(j * sizeX) + i] == tileBases[Tcolor])
                 {
                     //Debug.Log("detect road");
                     isWall = false;
@@ -345,29 +383,38 @@ public class GridBuildingSystem : MonoBehaviour
                     SetTilesBlock(road_area, TileType.Black, TempTilemap);
                     //print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y);
                 }
-                Debug.Log("shortest path: " + (FinalNodeList.Count - 2));
+                if(Tcolor == TileType.Road)
+                    Debug.Log("shortest path: " + (FinalNodeList.Count - 2));
+                else if(Tcolor == TileType.Uroad)
+                    Debug.Log("user set path: " + (FinalNodeList.Count - 2));
                 return;
             }
 
 
             // ↗↖↙↘
-            if (allowDiagonal)
+/*            if (allowDiagonal)
             {
                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y - 1);
                 OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-            }
+            }*/
 
             // ↑ → ↓ ←
-            OpenListAdd(CurNode.x, CurNode.y + 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y);
-            OpenListAdd(CurNode.x, CurNode.y - 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y);
+            
+            OpenListAdd(CurNode.x, CurNode.y + 1, ref move_check);
+            OpenListAdd(CurNode.x + 1, CurNode.y, ref move_check);
+            OpenListAdd(CurNode.x, CurNode.y - 1, ref move_check);
+            OpenListAdd(CurNode.x - 1, CurNode.y, ref move_check);
+            if(move_check == 0)
+            {
+                Debug.Log("can't find path");
+                break;
+            }
         }
     }
 
-    void OpenListAdd(int checkX, int checkY)
+    void OpenListAdd(int checkX, int checkY, ref int moving)
     {
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
@@ -391,6 +438,7 @@ public class GridBuildingSystem : MonoBehaviour
                 NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
                 NeighborNode.ParentNode = CurNode;
                 OpenList.Add(NeighborNode);
+                moving++;
             }
         }
     }
@@ -419,5 +467,6 @@ public enum TileType
     Red,
     Road,
     Black,
-    Transparency
+    Transparency,
+    Uroad
 }
