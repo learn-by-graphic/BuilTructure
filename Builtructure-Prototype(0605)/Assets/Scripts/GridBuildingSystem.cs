@@ -23,7 +23,7 @@ public class GridBuildingSystem : MonoBehaviour
     //variable for pathfind
     private Vector3Int bottomLeft, topRight, startPos, targetPos;
     public List<Node> FinalNodeList;
-    public bool allowDiagonal, dontCrossCorner;
+    public bool dontCrossCorner = true;
 
     int sizeX, sizeY;
     
@@ -316,15 +316,13 @@ public class GridBuildingSystem : MonoBehaviour
 
     public void PathFinding(TileType Tcolor)
     {
-        int move_check = 0;
 
         // NodeArray의 크기 정해주고, isWall, x, y 대입
         sizeX = topRight.x - bottomLeft.x + 1;
         sizeY = topRight.y - bottomLeft.y + 1;
         NodeArray = new Node[sizeX, sizeY];
 
-        BoundsInt tiles_area = new BoundsInt(bottomLeft, size: new Vector3Int(sizeX, sizeY, 1)); // 좌표 환산할 맵 크기를 결정하는 부분임 
-        //BoundsInt tiles_area = MainTilemap.    
+        BoundsInt tiles_area = new BoundsInt(bottomLeft, size: new Vector3Int(sizeX, sizeY, 1)); // 좌표 환산할 맵 크기를 결정하는 부분임   
         TileBase[] tiles = GetTilesBlock(tiles_area, MainTilemap);
 
         for (int i = 0; i < sizeX; i++)
@@ -335,7 +333,6 @@ public class GridBuildingSystem : MonoBehaviour
 
                 if (tiles[(j * sizeX) + i] == tileBases[Tcolor])
                 {
-                    //Debug.Log("detect road");
                     isWall = false;
                 }
                 NodeArray[i, j] = new Node(isWall, i + bottomLeft.x, j + bottomLeft.y);
@@ -379,7 +376,6 @@ public class GridBuildingSystem : MonoBehaviour
                 {
                     Vector3Int pathroad = new Vector3Int(FinalNodeList[i].x, FinalNodeList[i].y, 1);
                     BoundsInt road_area = new BoundsInt(pathroad, size: new Vector3Int(1, 1, 1));
-                    // SetTilesBlock(road_area, TileType.Empty, TempTilemap); //이게 지금 색이 road보다 덮어져 쓰여지지가 않는데 이유를 모르겠음 
                     SetTilesBlock(road_area, TileType.Black, TempTilemap);
                     //print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y);
                 }
@@ -387,37 +383,32 @@ public class GridBuildingSystem : MonoBehaviour
                     Debug.Log("shortest path: " + (FinalNodeList.Count - 2));
                 else if(Tcolor == TileType.Uroad)
                     Debug.Log("user set path: " + (FinalNodeList.Count - 2));
+
                 return;
             }
 
 
-            // ↗↖↙↘
-/*            if (allowDiagonal)
-            {
-                OpenListAdd(CurNode.x + 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y - 1);
-                OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-            }*/
 
             // ↑ → ↓ ←
             
-            OpenListAdd(CurNode.x, CurNode.y + 1, ref move_check);
-            OpenListAdd(CurNode.x + 1, CurNode.y, ref move_check);
-            OpenListAdd(CurNode.x, CurNode.y - 1, ref move_check);
-            OpenListAdd(CurNode.x - 1, CurNode.y, ref move_check);
+            OpenListAdd(CurNode.x, CurNode.y + 1);
+            OpenListAdd(CurNode.x + 1, CurNode.y);
+            OpenListAdd(CurNode.x, CurNode.y - 1);
+            OpenListAdd(CurNode.x - 1, CurNode.y);
         }
         // openList empty
-        Debug.Log("can't find path");
+        if (Tcolor == TileType.Road)
+            Debug.Log("can't find shortest path");
+        else if (Tcolor == TileType.Uroad)
+            Debug.Log("can't find user set path");
+        return;
     }
 
-    void OpenListAdd(int checkX, int checkY, ref int moving)
+    void OpenListAdd(int checkX, int checkY)
     {
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
-            // 대각선 허용시, 벽 사이로 통과 안됨
-            if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             // 코너를 가로질러 가지 않을시, 이동 중에 수직수평 장애물이 있으면 안됨
             if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
@@ -435,7 +426,6 @@ public class GridBuildingSystem : MonoBehaviour
                 NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
                 NeighborNode.ParentNode = CurNode;
                 OpenList.Add(NeighborNode);
-                moving++;
             }
         }
     }
