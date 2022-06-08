@@ -406,12 +406,9 @@ public class GridBuildingSystem : MonoBehaviour
             OpenListAdd(CurNode.x + 1, CurNode.y, ref move_check);
             OpenListAdd(CurNode.x, CurNode.y - 1, ref move_check);
             OpenListAdd(CurNode.x - 1, CurNode.y, ref move_check);
-            if(move_check == 0)
-            {
-                Debug.Log("can't find path");
-                break;
-            }
         }
+        // openList empty
+        Debug.Log("can't find path");
     }
 
     void OpenListAdd(int checkX, int checkY, ref int moving)
