@@ -13,7 +13,7 @@ public class GridBuildingSystem : MonoBehaviour
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
     public Player player;
-
+    
     public static Dictionary<TileType, TileBase> tileBases = new Dictionary<TileType, TileBase>();
 
     private Building temp;
@@ -42,6 +42,7 @@ public class GridBuildingSystem : MonoBehaviour
 
     private void Start()
     {
+
         string tilePath = @"Tiles\";
         tileBases.Add(TileType.Empty, null);
         tileBases.Add(TileType.White, Resources.Load<TileBase>(tilePath + "ground_grass"));

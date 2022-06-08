@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public Player player;
 
     public GameObject gamePanel;
+    public GameObject coverimage;
     public TextMeshProUGUI userNameTxt1;
     public TextMeshProUGUI userNameTxt2;
     public TextMeshProUGUI gameDateTxt;
@@ -53,4 +54,6 @@ public class GameManager : MonoBehaviour
         ironTxt.text = player.iron.ToString();
         
     }
+
+
 }
