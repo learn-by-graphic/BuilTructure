@@ -2,23 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-
+using System.Threading;
 
 public class Car : MonoBehaviour
 {
-    
+    Vector3Int dstpoint;
+    Tilemap tilemap;
     // Start is called before the first frame update
     void Start()
     {
-
-        carMove(Vector3Int.up , 1);
-
+        tilemap = transform.parent.GetComponent<Tilemap>();
+        dstpoint = getDstPoint();
+        
+        for (int i=0; i<11; i++)
+        {
+            carMove(Vector3Int.right, 1);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    Vector3Int getDstPoint()
+    {
+        GameObject dstPoint = GameObject.Find("DstPoint");
+        Vector3Int dstCellp = tilemap.WorldToCell(dstPoint.transform.position);
+
+        return dstCellp;
     }
 
     void carMove(Vector3Int vec , int steps)
@@ -31,10 +44,18 @@ public class Car : MonoBehaviour
         Vector3Int.up -> 좌상단 이동
         Vector3Int.down -> 우하단 이동
          */
-        Tilemap tilemap = transform.parent.GetComponent<Tilemap>();
         Vector3Int cellPosition = tilemap.WorldToCell(transform.position);
-
         cellPosition += vec * steps;
         transform.position = tilemap.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
+
+        if (cellPosition == dstpoint)
+        {
+            Debug.Log("도착");
+            return;
+        }
+
+
     }
+
+
 }
