@@ -8,16 +8,12 @@ public class Car : MonoBehaviour
 {
     Vector3Int dstpoint;
     Tilemap tilemap;
+    
     // Start is called before the first frame update
     void Start()
     {
         tilemap = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
-        
-        for (int i=0; i<11; i++)
-        {
-            carMove(Vector3Int.right, 1);
-        }
     }
 
     // Update is called once per frame
@@ -34,7 +30,7 @@ public class Car : MonoBehaviour
         return dstCellp;
     }
 
-    void carMove(Vector3Int vec , int steps)
+    void carMove(Vector3Int vec, int steps)
     {
         /*
          * 0.62f (차 이동 보정수치)
@@ -54,8 +50,21 @@ public class Car : MonoBehaviour
             return;
         }
 
-
     }
-
-
+    public void carMoveRight()
+    {
+        carMove(Vector3Int.right, 1);
+    }
+    public void carMoveLeft()
+    {
+        carMove(Vector3Int.left, 1);
+    }
+    public void carMoveUp()
+    {
+        carMove(Vector3Int.up, 1);
+    }
+    public void carMoveDown()
+    {
+        carMove(Vector3Int.down, 1);
+    }
 }
