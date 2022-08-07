@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public Tile DarkTile;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         DarkMap.origin = Ground.origin;
         DarkMap.size = Ground.size;
