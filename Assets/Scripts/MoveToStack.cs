@@ -20,11 +20,15 @@ public class MoveToStack : MonoBehaviour
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
     public RectTransform prefabRect; // 캔버스 하위의 이동시킬 Rect (HP Bar 등)
 
-    int storedNum = 0;  //스택에 들어있는 개수
+
+    //스택 안에 관리
+    public GameObject[] InStack = new GameObject[100];
+    int storedCount;  //스택에 들어있는 개수
 
     // Start is called before the first frame update
     void Start()
     {
+        storedCount = 0;
         /*
         Grid = GameObject.Find("Grid");
         car = Grid.GetComponent<Car>();
@@ -101,10 +105,16 @@ public class MoveToStack : MonoBehaviour
         //프리펩이 생성되는 위치 조정
         prefabRect = prefab.GetComponent<RectTransform>();
         prefabRect.anchoredPosition3D = new Vector3 (-75, -236, 0);
+        GoToStack(prefab);
     }
     //Stack으로 프리팹 이동 모션
-    public void GoToStack()
+    public void GoToStack(GameObject pf)
     {
+        int i = storedCount;
+        InStack[i] = pf;
+
+        //스택인디케이터의 포지션 + 높이/2 -> 맨위로 
+        //RectTransform dstRect = 1;
 
     }
 
