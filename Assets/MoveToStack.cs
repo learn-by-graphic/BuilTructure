@@ -92,20 +92,20 @@ public class MoveToStack : MonoBehaviour
     }
 
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
-
     public void MakePrefab(string blockName)
     {
+        //Euler(0, 180.0f, 0) Quaternion.identity
         //프리팹 생성
-        prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), GameObject.Find(blockName).transform.rotation, GameObject.Find("Canvas").transform);
         //프리팹 좌표 조정
         //프리펩이 생성되는 위치 조정
         prefabRect = prefab.GetComponent<RectTransform>();
         prefabRect.anchoredPosition3D = new Vector3 (-75, -236, 0);
     }
-
-    public void WhenClicked()
+    //Stack으로 프리팹 이동 모션
+    public void GoToStack()
     {
-        //클릭되면 그 오브젝트 이름에 따라 오브젝트 생성
+
     }
 
     // Update is called once per frame
