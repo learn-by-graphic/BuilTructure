@@ -17,14 +17,8 @@ public class MoveToStack : MonoBehaviour
     Vector3Int cellPosition;
 
     //프리팹
-    public GameObject item = null;
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
-    public Vector3 rectPos = new Vector3(0, -75, -236);     //내가 만들고자 하는 프리팹 좌표
-
-    public RectTransform canvasRect; // 메인 캔버스
     public RectTransform prefabRect; // 캔버스 하위의 이동시킬 Rect (HP Bar 등)
-
-    public Transform parent;
 
     int storedNum = 0;  //스택에 들어있는 개수
 
@@ -103,44 +97,10 @@ public class MoveToStack : MonoBehaviour
     {
         //프리팹 생성
         prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-
         //프리팹 좌표 조정
         //프리펩이 생성되는 위치 조정
-        canvas = GameObject.Find("Canvas");
-        canvasRect = canvas.GetComponent<RectTransform>();
         prefabRect = prefab.GetComponent<RectTransform>();
-
-        //then you calculate the position of the UI element
-        //0,0 for the canvas is at the center of the screen, whereas WorldToViewPortPoint treats the lower left corner as 0,0. Because of this, you need to subtract the height / width of the canvas * 0.5 to get the correct position.
-
-        Vector2 ViewportPosition = Camera.main.WorldToViewportPoint(transform.position);
-        Vector2 WorldObject_ScreenPosition = new Vector2(
-        ((ViewportPosition.x * canvasRect.sizeDelta.x) - (canvasRect.sizeDelta.x * 0.5f)),
-        ((ViewportPosition.y * canvasRect.sizeDelta.y) - (canvasRect.sizeDelta.y * 0.5f)));
-
-        //now you can set the position of the ui element
-        prefabRect.anchoredPosition = WorldObject_ScreenPosition;
-
-        /*
-        // Final position of marker above GO in world space
-        Vector3 offsetPos = rectPos;
-
-        // Calculate *screen* position (note, not a canvas/recttransform position)
-        Vector2 canvasPos;
-        Vector2 screenPoint = Camera.main.WorldToScreenPoint(offsetPos);
-
-        // Convert screen position to Canvas / RectTransform space <- leave camera null if Screen Space Overlay
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, null, out canvasPos);
-
-        // Set
-        prefab.transform.localPosition = canvasPos;
-
-        //rpos.localPosition = canvasPos;
-        Debug.Log(canvasPos);
-
-        //prefab.transform.localPosition = prefabpos;
-        //rpos.anchoredPosition = prefabpos;
-        */
+        prefabRect.anchoredPosition3D = new Vector3 (-75, -236, 0);
     }
 
     public void WhenClicked()
