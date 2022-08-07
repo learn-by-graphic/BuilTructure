@@ -4,28 +4,28 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Threading;
 
+
+
 public class Car : MonoBehaviour
 {
+    public Tilemap Ground;
     Vector3Int dstpoint;
-    Tilemap tilemap;
+    Tilemap Road;
     
     // Start is called before the first frame update
     void Start()
     {
-        tilemap = transform.parent.GetComponent<Tilemap>();
+        Road = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     Vector3Int getDstPoint()
     {
         GameObject dstPoint = GameObject.Find("DstPoint");
-        Vector3Int dstCellp = tilemap.WorldToCell(dstPoint.transform.position);
+        Vector3Int dstCellp = Road.WorldToCell(dstPoint.transform.position);
 
         return dstCellp;
     }
@@ -40,9 +40,16 @@ public class Car : MonoBehaviour
         Vector3Int.up -> 좌상단 이동
         Vector3Int.down -> 우하단 이동
          */
-        Vector3Int cellPosition = tilemap.WorldToCell(transform.position);
+        Vector3Int cellPosition = Road.WorldToCell(transform.position);
         cellPosition += vec * steps;
-        transform.position = tilemap.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
+        if (!Road.HasTile(cellPosition))
+        {
+            cellPosition -= vec * steps;
+            Debug.Log("이동불가");
+        }
+        transform.position = Road.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
+
+
 
         if (cellPosition == dstpoint)
         {
@@ -67,4 +74,6 @@ public class Car : MonoBehaviour
     {
         carMove(Vector3Int.down, 1);
     }
+
+
 }
