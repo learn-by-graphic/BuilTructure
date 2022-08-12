@@ -2720,6 +2720,7 @@ MonoBehaviour:
   - {fileID: 6591510320512687811, guid: 8c7ca73e497eac44babadf25715a6708, type: 3}
   - {fileID: 5603246064725558673, guid: be5c3ca8ea384e2499b18ac1dec17f94, type: 3}
   Parent: {fileID: 1263911800}
+  car: {fileID: 888491124}
 --- !u!1 &1284128332
 GameObject:
   m_ObjectHideFlags: 0
@@ -3976,7 +3977,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1875272904}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1263911805}
+        m_MethodName: move_car
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1875272904
 MonoBehaviour:
   m_ObjectHideFlags: 0
