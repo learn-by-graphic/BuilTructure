@@ -14,6 +14,7 @@ public class Car : MonoBehaviour
     Vector3Int dstpoint;
     Tilemap Road;
     SpriteRenderer spriteRenderer;
+    public bool flag = false;
     
     // Start is called before the first frame update
     void Start()
@@ -55,10 +56,12 @@ public class Car : MonoBehaviour
         {
             cellPosition -= vec * steps;
             Debug.Log("이동불가");
+            flag = false;
             return;
         }
         setWhiteTile(cellPosition , vec);
         transform.position = Road.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
+        flag = true;
 
 
 
