@@ -10,7 +10,6 @@ public class MoveToStack : MonoBehaviour
     //프리팹
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
 
-
     public bool moveflag = false;
     Vector3 startVec = new Vector3(-380, -70, 0);
     Vector3 arriveVec = new Vector3(370, 250, 0);
@@ -33,15 +32,16 @@ public class MoveToStack : MonoBehaviour
         prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
         //프리팹 좌표 조정
         prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
-
+        prefab.AddComponent<Move>();
         moveflag = true;
-        GameObject.Find(blockName).GetComponent<Move>().letsMove(moveflag);     //요기서 궤적이동
+        prefab.GetComponent<Move>().letsMove(moveflag);
 
         //Vector3 mcb = GameObject.Find("MoveCenterButton").GetComponent<RectTransform>().anchoredPosition3D;
         //Debug.Log("mdb" + mcb.ToString());
 
         MovePF(prefab);
     }
+
     //프리팹 이동 모션
     public void MovePF(GameObject pf)
     {
