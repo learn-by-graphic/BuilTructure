@@ -107,6 +107,32 @@ public class PushToStack : MonoBehaviour
 
         //제거
         storedCount--;
+        Car Car = GameObject.Find("Car").GetComponent<Car>();
+        Debug.Log(InStack[storedCount].ToString());
+        switch (InStack[storedCount].tag)
+        {
+            case "UpPrefab":
+                {
+                    Car.carMoveDown();
+                    break;
+                }
+            case "DownPrefab":
+                {
+                    Car.carMoveUp();
+                    break;
+                }
+            case "RightPrefab":
+                {
+                    Car.carMoveLeft();
+                    break;
+                }
+            case "LeftPrefab":
+                {
+                    Car.carMoveRight();
+                    break;
+                }
+        } 
+
         Destroy(InStack[storedCount]);
         Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
     }
@@ -120,6 +146,8 @@ public class PushToStack : MonoBehaviour
         storedCount = 0;
 
         //차 출발 위치로 되돌리기
+        Car Car = GameObject.Find("Car").GetComponent<Car>();
+        Car.carGoToStart();
     }
     public void Test()
     {

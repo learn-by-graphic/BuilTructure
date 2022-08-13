@@ -73,6 +73,11 @@ public class Car : MonoBehaviour
         }
 
     }
+
+    public void carGoToStart()
+    {
+        //여기에 차가 처음 시작하는 위치로 담는 것만 추가해주시면 감사하겠습니다
+    }
     public void carMoveRight()
     {
         carMove(Vector3Int.right, 1);
