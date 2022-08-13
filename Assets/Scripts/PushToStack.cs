@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 using System.Threading;
 
 
-public class MoveToStack : MonoBehaviour
+public class PushToStack : MonoBehaviour
 {
     //프리팹
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
@@ -18,7 +18,7 @@ public class MoveToStack : MonoBehaviour
 
     //스택 안에 관리
     public GameObject[] InStack = new GameObject[11];
-    int storedCount;  //스택에 들어있는 개수
+    public int storedCount;  //스택에 들어있는 개수
     public const int MAXCOUNT = 11;
     GameObject StackIndicator; //스택을 담을 공간
     float topY;     //현재 담겨있는 프리팹 중에 가장 높은 Y    (스택의 Top의 Y좌표
@@ -37,18 +37,18 @@ public class MoveToStack : MonoBehaviour
         {
             //프리팹 생성
             //Euler(0, 180.0f, 0), GameObject.Find(blockName).transform.rotation  
-            //prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
             prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
             //프리팹 좌표 조정
             prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
-            prefab.AddComponent<Move>();
+            prefab.AddComponent<PushMove>();
             moveflag = true;
-            prefab.GetComponent<Move>().letsMove(moveflag);
+            prefab.GetComponent<PushMove>().letsMove(moveflag);
 
             //스택에 옮겨서 저장
             AtStack(prefab, blockName);
         } else
         {
+            //스택 통 가득 찬 경우 동작
             Debug.Log("STACK이 가득 찼으니 POP 또는 EMPTY 해야 함");
         }
     }
@@ -87,7 +87,7 @@ public class MoveToStack : MonoBehaviour
     {
     }
     //Push Btn OnClick 될 때 동작시킬 함수
-    void PushClicked()
+    public void PushOnClicked()
     {
         //
     }

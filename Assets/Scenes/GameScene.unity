@@ -8426,7 +8426,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1636534147}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1636534149}
+        m_MethodName: PushOnClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1636534146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8594,6 +8605,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  storedCount: 0
 --- !u!224 &1697909611 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8950833592307219469, guid: 8c7ca73e497eac44babadf25715a6708,

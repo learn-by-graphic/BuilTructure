@@ -59,6 +59,7 @@ public class Car : MonoBehaviour
             flag = false;
             return;
         }
+        
         setWhiteTile(cellPosition , vec);
         transform.position = Road.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
         flag = true;
