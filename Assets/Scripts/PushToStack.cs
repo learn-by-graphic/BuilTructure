@@ -83,7 +83,7 @@ public class PushToStack : MonoBehaviour
         //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
         storedCount++;
         Debug.Log("(스택에 저장 후) 스택에 담긴 개수 : " + storedCount.ToString());
-        Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(false);
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -93,7 +93,7 @@ public class PushToStack : MonoBehaviour
     //Push Btn OnClick 될 때 동작시킬 함수
     public void PushOnClicked()
     {
-        Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(true);
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(true);
         //
     }
 
@@ -139,6 +139,21 @@ public class PushToStack : MonoBehaviour
 
     public void EmptyClicked()
     {
+        if(storedCount == 0)
+        {
+            //비어있음
+            GameObject EmptyText = Canvas.transform.Find("MessageEmpty").gameObject;
+            EmptyText.transform.SetAsLastSibling();
+            EmptyText.SetActive(true);
+            //메시지 다시 지워주기
+            //Invoke("EmptyText.SetActive(false)", 1.0f);
+        } else
+        {
+            //비어있지 않음!
+        }
+
+        /*
+        //다 지우려면
         for (int i =0; i<storedCount; i++)
         {
             Destroy(InStack[i]);
@@ -148,6 +163,7 @@ public class PushToStack : MonoBehaviour
         //차 출발 위치로 되돌리기
         Car Car = GameObject.Find("Car").GetComponent<Car>();
         Car.carGoToStart();
+        */
     }
     public void Test()
     {
