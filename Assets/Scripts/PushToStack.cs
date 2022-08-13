@@ -89,6 +89,8 @@ public class PushToStack : MonoBehaviour
     //Push Btn OnClick 될 때 동작시킬 함수
     public void PushOnClicked()
     {
+        GameObject Canvas = GameObject.Find("Canvas");
+        Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(true);
         //
     }
 
