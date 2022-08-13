@@ -9,6 +9,8 @@ using System.Threading;
 
 public class PushToStack : MonoBehaviour
 {
+
+    GameObject Canvas;
     //프리팹
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
 
@@ -29,6 +31,7 @@ public class PushToStack : MonoBehaviour
     {
         storedCount = 0;
         StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
+        Canvas = GameObject.Find("Canvas");
     }
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
     public void MakePrefab(string blockName)
@@ -80,6 +83,8 @@ public class PushToStack : MonoBehaviour
         //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
         storedCount++;
+
+        Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -89,7 +94,6 @@ public class PushToStack : MonoBehaviour
     //Push Btn OnClick 될 때 동작시킬 함수
     public void PushOnClicked()
     {
-        GameObject Canvas = GameObject.Find("Canvas");
         Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(true);
         //
     }
