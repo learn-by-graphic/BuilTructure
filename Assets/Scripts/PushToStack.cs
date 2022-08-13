@@ -20,7 +20,7 @@ public class PushToStack : MonoBehaviour
 
     //스택 안에 관리
     public GameObject[] InStack = new GameObject[11];
-    public int storedCount;  //스택에 들어있는 개수
+    public int storedCount=0;  //스택에 들어있는 개수
     public const int MAXCOUNT = 11;
     GameObject StackIndicator; //스택을 담을 공간
     float topY;     //현재 담겨있는 프리팹 중에 가장 높은 Y    (스택의 Top의 Y좌표
@@ -29,7 +29,6 @@ public class PushToStack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        storedCount = 0;
         StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
         Canvas = GameObject.Find("Canvas");
     }
@@ -83,7 +82,7 @@ public class PushToStack : MonoBehaviour
         //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
         storedCount++;
-
+        Debug.Log("(스택에 저장 후) 스택에 담긴 개수 : " + storedCount.ToString());
         Canvas.transform.FindChild("MoveGroup").gameObject.SetActive(false);
     }
 
@@ -98,6 +97,30 @@ public class PushToStack : MonoBehaviour
         //
     }
 
+    public void PopOnClicked()
+    {
+        Debug.Log("(Pop 전) 스택에 담긴 개수 : " + storedCount.ToString());
+        //날아가는 모션 추가
+
+        //스택에 맨 위에 꺼 뭔지 확인 후 차 반대로 움직이기
+
+
+        //제거
+        storedCount--;
+        Destroy(InStack[storedCount]);
+        Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
+    }
+
+    public void EmptyClicked()
+    {
+        for (int i =0; i<storedCount; i++)
+        {
+            Destroy(InStack[i]);
+        }
+        storedCount = 0;
+
+        //차 출발 위치로 되돌리기
+    }
     public void Test()
     {
         Debug.Log("스택으로 움직이기 위한 함수 호출");
