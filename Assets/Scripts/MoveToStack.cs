@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 using UnityEngine.Tilemaps;
 using System.Threading;
+
+
 public class MoveToStack : MonoBehaviour
 {
     //프리팹
@@ -15,44 +17,69 @@ public class MoveToStack : MonoBehaviour
     Vector3 arriveVec = new Vector3(370, 250, 0);
 
     //스택 안에 관리
-    public GameObject[] InStack = new GameObject[100];
+    public GameObject[] InStack = new GameObject[11];
     int storedCount;  //스택에 들어있는 개수
+    public const int MAXCOUNT = 11;
+    GameObject StackIndicator; //스택을 담을 공간
+    float topY;     //현재 담겨있는 프리팹 중에 가장 높은 Y    (스택의 Top의 Y좌표
+    Vector3 entrancePos;     //스택 통의 꼭대기 (입구의 Y좌표)
 
     // Start is called before the first frame update
     void Start()
     {
         storedCount = 0;
+        StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
     }
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
     public void MakePrefab(string blockName)
     {
+        if (storedCount < MAXCOUNT)
+        {
+            //프리팹 생성
+            //Euler(0, 180.0f, 0), GameObject.Find(blockName).transform.rotation  
+            //prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+            prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+            //프리팹 좌표 조정
+            prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
+            prefab.AddComponent<Move>();
+            moveflag = true;
+            prefab.GetComponent<Move>().letsMove(moveflag);
 
-        //Euler(0, 180.0f, 0), GameObject.Find(blockName).transform.rotation  
-        //프리팹 생성
-        prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-        //프리팹 좌표 조정
-        prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
-        prefab.AddComponent<Move>();
-        moveflag = true;
-        prefab.GetComponent<Move>().letsMove(moveflag);
-
-        //Vector3 mcb = GameObject.Find("MoveCenterButton").GetComponent<RectTransform>().anchoredPosition3D;
-        //Debug.Log("mdb" + mcb.ToString());
-
-        MovePF(prefab);
+            //스택에 옮겨서 저장
+            AtStack(prefab, blockName);
+        } else
+        {
+            Debug.Log("STACK이 가득 찼으니 POP 또는 EMPTY 해야 함");
+        }
     }
 
-    //프리팹 이동 모션
-    public void MovePF(GameObject pf)
+    public void AtStack(GameObject pf, string blockName)
     {
-        //prefabRect.anchoredPosition3D = Vector3.Slerp(prefabRect.anchoredPosition3D, arriveVec, 0.05f);
+        //모션 이동했던 큰 프리팹 제거
+        //Destroy(pf);
 
-    }
+        //스택에 들어갈 작은 프리팹 생성
+        // 앵커로부터 길이/2 + 아이콘 크기*(밑에 개수)
+        Debug.Log(storedCount.ToString());
+        
+        //이번에 스택에 들어갈 프리팹                                                                
+        InStack[storedCount] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), StackIndicator.transform.position, Quaternion.identity, StackIndicator.transform);
+        InStack[storedCount].transform.SetAsLastSibling();  //UI 상 제일 위에 보이게
+        float IconWidth = InStack[storedCount].GetComponent<RectTransform>().rect.width;    //프리팹 크기
+        //출발 위치 (스택 통 꼭대기)
+        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3((StackIndicator.GetComponent<RectTransform>().rect.width / 2)-IconWidth/2, 0, 0);
 
-public void AtStack(GameObject pf)
-    {
-        int i = storedCount;
-        InStack[i] = pf;
+        InStack[storedCount].SetActive(true);
+
+        //스택통따라 움직이기
+
+        //현재 위치 : 스택통 맨위 -> 수정 위치 : 현 위치 - 스택 통 길이 + 프리팹 크기 + (몇번째인지)
+        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width + IconWidth + IconWidth*storedCount, 0, 0);
+
+        //InStack[storedCount].GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0);
+        //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
+        //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
+        storedCount++;
     }
 
     // Update is called once per frame
