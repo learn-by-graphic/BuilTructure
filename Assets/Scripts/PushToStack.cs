@@ -50,10 +50,10 @@ public class PushToStack : MonoBehaviour
             prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
             prefab.AddComponent<PushMove>();
             moveflag = true;
-            prefab.GetComponent<PushMove>().letsMove(moveflag);
+            prefab.GetComponent<PushMove>().letsMove(moveflag, blockName);
 
             //스택에 옮겨서 저장
-            AtStack(blockName);
+            //AtStack(blockName);
         } else
         {
             //스택 통 가득 찬 경우 동작

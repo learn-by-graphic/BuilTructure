@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PushMove : MonoBehaviour
 {
-
+    string blockname;
     bool start;
 
     public RectTransform Target;       //도착지
 
-    public float m_Speed = 200.0f;
-    public float m_HeightArc = 90.0f;
+    public float m_Speed = 300.0f;
+    public float m_HeightArc = 120.0f;
     private bool m_IsStart;
     Vector3 startpos;
     Vector3 startVec = new Vector3(-380, -70, 0);
@@ -104,22 +104,24 @@ public class PushMove : MonoBehaviour
 
     }
 
-    public void letsMove(bool m_IsStart)
+    public void letsMove(bool m_IsStart, string blockName)
     {
         if (m_IsStart)
         {
             Debug.Log("Move Start");
             start = true;
+            blockname = blockName;
         }
     }
     
     void Arrived()
     {
         Debug.Log("도착");
-        //GameObject.Find("Button_Push").GetComponent<PushToStack>().DestroyPrefab();
+        //
         System.Threading.Thread.Sleep(1000);
         Destroy(gameObject);
         start = false;
+        GameObject.Find("Button_push").GetComponent<PushToStack>().AtStack(blockname);
     }
     Quaternion LookAt2D(Vector2 forward)
     {
