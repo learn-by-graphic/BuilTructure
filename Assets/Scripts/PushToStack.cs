@@ -142,6 +142,7 @@ public class PushToStack : MonoBehaviour
             GameObject EmptyText = Canvas.transform.Find("MessageEmpty").gameObject;
             EmptyText.transform.SetAsLastSibling();
             EmptyText.SetActive(true);
+            Debug.Log("empty");
             //메시지 다시 지워주기
             //Invoke("EmptyText.SetActive(false)", 1.0f);
         } else

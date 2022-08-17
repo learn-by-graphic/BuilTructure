@@ -126,5 +126,7 @@ public class Queue_commands : MonoBehaviour
         {
             
         }
+        i = 0;
+        count = 0;
     }
 }
