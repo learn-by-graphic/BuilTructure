@@ -32,8 +32,14 @@ public class PushToStack : MonoBehaviour
         StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
         Canvas = GameObject.Find("Canvas");
     }
+    
+
+    // Update is called once per frame
+    void Update()
+    {
+    }
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
-    public void MakePrefab(string blockName)
+    public void MakePrefab(string blockName)        
     {
         if (storedCount < MAXCOUNT)
         {
@@ -47,7 +53,7 @@ public class PushToStack : MonoBehaviour
             prefab.GetComponent<PushMove>().letsMove(moveflag);
 
             //스택에 옮겨서 저장
-            AtStack(prefab, blockName);
+            AtStack(blockName);
         } else
         {
             //스택 통 가득 찬 경우 동작
@@ -55,11 +61,8 @@ public class PushToStack : MonoBehaviour
         }
     }
 
-    public void AtStack(GameObject pf, string blockName)
+    public void AtStack(string blockName)
     {
-        //모션 이동했던 큰 프리팹 제거
-        //Destroy(pf);
-
         //스택에 들어갈 작은 프리팹 생성
         // 앵커로부터 길이/2 + 아이콘 크기*(밑에 개수)
         Debug.Log(storedCount.ToString());
@@ -74,7 +77,8 @@ public class PushToStack : MonoBehaviour
         InStack[storedCount].SetActive(true);
 
         //스택통따라 움직이기
-
+        /////////////
+        
         //현재 위치 : 스택통 맨위 -> 수정 위치 : 현 위치 - 스택 통 길이 + 프리팹 크기 + (몇번째인지)
         InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width + IconWidth + IconWidth*storedCount, 0, 0);
 
@@ -86,10 +90,6 @@ public class PushToStack : MonoBehaviour
         Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
     //Push Btn OnClick 될 때 동작시킬 함수
     public void PushOnClicked()
     {
@@ -101,10 +101,7 @@ public class PushToStack : MonoBehaviour
     {
         Debug.Log("(Pop 전) 스택에 담긴 개수 : " + storedCount.ToString());
         //날아가는 모션 추가
-
-        //스택에 맨 위에 꺼 뭔지 확인 후 차 반대로 움직이기
-
-
+        /////////////
         //제거
         storedCount--;
         Car Car = GameObject.Find("Car").GetComponent<Car>();
@@ -165,27 +162,6 @@ public class PushToStack : MonoBehaviour
         Car.carGoToStart();
         */
     }
-    public void Test()
-    {
-        Debug.Log("스택으로 움직이기 위한 함수 호출");
-
-        //클릭 되었던 방향 버튼 정보 가져와서 확대 Or 색 변경으로 강조
-        //Debug.Log(blockName);
-        //
-        //클릭된 방향 버튼 객체 자체나 Transform을 인자로 받아올 수 있을지?
-        //받아왔다면 그 좌표가 궤적이동 시작점, 그 객체 자체가 궤적이동 대상 객체
-        //객체 복사해서 던지기
-        //궤적 이동
-        //목표 위치값까지 포물선 궤적으로 오브젝트 날리기
-        //스택 박스에 저장 - 이미 담겨있는 것에 따라 구분 필요
-        //이동 기록의 Text Input 숫자에 따라서 배치 될 공간 설정.
-    }
-    //도착한 스택들 관리
-    void Dst()
-    {
-    }
-
-    //Finish
 
     //각 화살표 방향이 클릭 되었을 때 걔네 정보를 가져올 Onclick 함수
     public void MoveUpOnClicked()
@@ -250,5 +226,6 @@ public class PushToStack : MonoBehaviour
         Car carScript = GameObject.Find("Car").GetComponent<Car>();
         return carScript.flag;
     }
+
 }
 

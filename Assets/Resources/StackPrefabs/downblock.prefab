@@ -85,7 +85,6 @@ GameObject:
   - component: {fileID: 8038668112280063489}
   - component: {fileID: 8038668112254026154}
   - component: {fileID: 8038668112254026155}
-  - component: {fileID: 8038668112254026152}
   m_Layer: 0
   m_Name: downblock
   m_TagString: DownPrefab
@@ -150,20 +149,3 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8038668112254026152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8038668112254026153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec4a7b0948d1b3c4e9f42a8d1953a371, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  targetPos: {x: 0, y: 0, z: 0}
-  m_Speed: 10
-  m_HeightArc: 1
-  travelTime: 10
