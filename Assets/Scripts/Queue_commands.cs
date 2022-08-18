@@ -117,6 +117,8 @@ public class Queue_commands : MonoBehaviour
             {
                 CancelInvoke("move_car");
                 Debug.Log("이동 종료");
+                count = 0;
+                i = 0;
                 return;
             }
             
@@ -126,7 +128,5 @@ public class Queue_commands : MonoBehaviour
         {
             
         }
-        i = 0;
-        count = 0;
     }
 }

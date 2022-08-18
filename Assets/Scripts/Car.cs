@@ -23,6 +23,9 @@ public class Car : MonoBehaviour
         Road = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
         DarkMap.SetTile(dstpoint, WhiteTile);
+        //시작위치 시야
+        Vector3Int cellPosition = Road.WorldToCell(transform.position);
+        DarkMap.SetTile(cellPosition, WhiteTile);
     }
 
     // Update is called once per frame
@@ -77,6 +80,14 @@ public class Car : MonoBehaviour
     public void carGoToStart()
     {
         //여기에 차가 처음 시작하는 위치로 담는 것만 추가해주시면 감사하겠습니다
+
+        Vector3Int cellPosition = Road.WorldToCell(transform.position);
+
+        // transform.position 이 차의 처음위치 인데 
+        // cellPosition이 포지션 기반으로 타일맵 상의 좌표를 해석해둔 거에요
+        // 포지션이 정수배가 아니고 그리드 크기 자체도 실수라 계산하기가 까다로워요 
+        // 위치를 사용하려면 cellPosition이 맞는데 , 얘를 이동시키려면 carMove 함수들 처럼 벡터를 더해주고 그 cellPoisiton을 다시 트랜스폼으로 역변환 하면 되요.
+
     }
     public void carMoveRight()
     {
