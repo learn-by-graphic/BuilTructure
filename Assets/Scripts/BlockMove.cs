@@ -109,13 +109,13 @@ public class BlockMove : MonoBehaviour
                         //꼭대기에 오면 밖으로 이동
                         if (VecRound(nextPosition) == VecRound(targetpos)) {
 
-                            System.Threading.Thread.Sleep(400);
+                            System.Threading.Thread.Sleep(100);
                             newmoveflag = true; //스택통 바깥 움직임을 제어할 플래그
                             transform.parent = GameObject.Find("Canvas").transform; //스택인디케이터 안에 있던 오브젝트를 캔버스 하위 오브젝트로 변경
                             transform.GetComponent<RectTransform>().anchoredPosition3D = GameObject.Find("DstOfMove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                             //크기 확대
                             transform.GetComponent<RectTransform>().sizeDelta = new Vector2(150, 150);
-                            transform.FindChild("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+                            transform.Find("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
                         }
                     }
                     else                 //스택 꼭대기 -> 밖으로 이동
@@ -151,7 +151,7 @@ public class BlockMove : MonoBehaviour
         {
             case 1:     //방향키 블록이 스택 통까지 날아가는 움직임
                 {
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(100);
                     Destroy(gameObject);
                     GameObject.Find("Button_push").GetComponent<PushToStack>().AtStack();
 
@@ -159,7 +159,7 @@ public class BlockMove : MonoBehaviour
                 }
             case 2:     //스택통 맨 위에서 아래로 떨어지는 움직임
                 {
-                    System.Threading.Thread.Sleep(300);
+                    System.Threading.Thread.Sleep(100);
                     Debug.Log("스택에 저장 완료!");
                     break;
                 }
