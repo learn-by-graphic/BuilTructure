@@ -10,7 +10,7 @@ public class BlockMove : MonoBehaviour
 
     public RectTransform Target;       //도착지
 
-    public float m_Speed = 600.0f;  //450
+    public float m_Speed = 1000.0f;  //450
     public float m_HeightArc = 120.0f;
     Vector3 startpos;
     Vector3 targetpos;
@@ -161,6 +161,7 @@ public class BlockMove : MonoBehaviour
                 {
                     System.Threading.Thread.Sleep(100);
                     Debug.Log("스택에 저장 완료!");
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().PeekOnClicked();
                     break;
                 }
             case 3:     //POP
@@ -168,6 +169,7 @@ public class BlockMove : MonoBehaviour
                     Debug.Log("Pop 완료");
                     newmoveflag = false;
                     Destroy(gameObject);
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().PeekOnClicked();
                     break;
                 }
         }

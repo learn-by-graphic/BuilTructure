@@ -55,7 +55,8 @@ public class Car : MonoBehaviour
         
         Vector3Int cellPosition = Road.WorldToCell(transform.position);
         cellPosition += vec * steps;
-        if (!Road.HasTile(cellPosition))
+        
+        if (!Road.HasTile(cellPosition) || GameObject.Find("Button_push").GetComponent<PushToStack>().storedCount >= 11)
         {
             cellPosition -= vec * steps;
             Debug.Log("이동불가");

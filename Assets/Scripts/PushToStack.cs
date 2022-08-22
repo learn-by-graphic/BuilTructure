@@ -96,12 +96,14 @@ public class PushToStack : MonoBehaviour
         //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
         storedCount++;
+
         Debug.Log("(스택에 저장 후) 스택에 담긴 개수 : " + storedCount.ToString());
-        Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
+        //Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
     }
 
     public void PopOnClicked()
     {
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
         Debug.Log("(Pop 전) 스택에 담긴 개수 : " + storedCount.ToString());
         //날아가는 모션 추가
         if(storedCount>0)
@@ -141,6 +143,7 @@ public class PushToStack : MonoBehaviour
             //Destroy(InStack[storedCount]);  //프리팹 제거    
             System.Array.Clear(blocknameArr, storedCount, 1);
             Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
+            //PeekOnClicked();    //피크 갱신
         } else
         {
             Debug.Log("스택에 POP 할 수 있는 것이 없음.");
@@ -150,6 +153,7 @@ public class PushToStack : MonoBehaviour
     }
     public void PeekOnClicked()
     {
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
         if (storedCount > 0)
         {
             //스택 통 길이/2 
@@ -169,12 +173,13 @@ public class PushToStack : MonoBehaviour
             PeekPointer.gameObject.SetActive(true);
 
             //System.Threading.Thread.Sleep(1000);
-            //PeekPointer.gameObject.SetActive(false);
+            Invoke("PeekPointer.gameObject.SetActive(false)", 10.0f);
         }
     }
     public void EmptyClicked()
     {
-        if(storedCount == 0)
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
+        if (storedCount == 0)
         {
             //비어있음
             GameObject EmptyText = Canvas.transform.Find("MessageEmpty").gameObject;
@@ -182,8 +187,9 @@ public class PushToStack : MonoBehaviour
             EmptyText.SetActive(true);
             Debug.Log("empty");
             //메시지 다시 지워주기
-            System.Threading.Thread.Sleep(10000);
-            EmptyText.SetActive(false);
+            //System.Threading.Thread.Sleep(10000);
+            Invoke("EmptyText.SetActive(false)", 10.0f);
+            
         } else
         {
             //비어있지 않음!
