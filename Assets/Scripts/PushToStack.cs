@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using UnityEngine.Tilemaps;
-using System.Threading;
-using System;
 
 
 public class PushToStack : MonoBehaviour
@@ -14,34 +11,39 @@ public class PushToStack : MonoBehaviour
     GameObject Canvas;
     //프리팹
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
-
     public bool moveflag = false;
     
-    
-
     //스택 안에 관리
-    public GameObject[] InStack = new GameObject[11];
-    public string[] blocknameArr = new string[11];
-    public int storedCount=0;  //스택에 들어있는 개수
+    public GameObject[] InStack;
+    public string[] blocknameArr;
+    public int storedCount;  //스택에 들어있는 개수
     public const int MAXCOUNT = 11;
     GameObject StackIndicator; //스택을 담을 공간
-    float topY;     //현재 담겨있는 프리팹 중에 가장 높은 Y    (스택의 Top의 Y좌표
     Vector3 entrancePos;     //스택 통의 꼭대기 (입구의 Y좌표)
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
+        storedCount = 0;
+        InStack = new GameObject[11];
+        blocknameArr = new string[11];
+
         StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
         Canvas = GameObject.Find("Canvas");
     }
-    
-
+    // Start is called before the first frame update
+    void Start()
+    {
+    }
     // Update is called once per frame
     void Update()
     {
     }
-
-
+    //Push Btn OnClick 될 때 동작시킬 함수
+    public void PushOnClicked()
+    {
+        Canvas.transform.Find("MoveGroup").gameObject.SetActive(true);
+        //
+    }
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
     public void MakePrefab(string blockName)        
     {
@@ -67,7 +69,6 @@ public class PushToStack : MonoBehaviour
             Debug.Log("STACK이 가득 찼으니 POP 또는 EMPTY 해야 함");
         }
     }
-
     public void AtStack()
     {
         //스택에 들어갈 작은 프리팹 생성
@@ -97,13 +98,6 @@ public class PushToStack : MonoBehaviour
         storedCount++;
         Debug.Log("(스택에 저장 후) 스택에 담긴 개수 : " + storedCount.ToString());
         Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
-    }
-
-    //Push Btn OnClick 될 때 동작시킬 함수
-    public void PushOnClicked()
-    {
-        Canvas.transform.Find("MoveGroup").gameObject.SetActive(true);
-        //
     }
 
     public void PopOnClicked()
@@ -144,18 +138,40 @@ public class PushToStack : MonoBehaviour
                         break;
                     }
             }
-
-
             //Destroy(InStack[storedCount]);  //프리팹 제거    
-            Array.Clear(blocknameArr, storedCount, 1);
+            System.Array.Clear(blocknameArr, storedCount, 1);
             Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
         } else
         {
             Debug.Log("스택에 POP 할 수 있는 것이 없음.");
+            EmptyClicked();     //비어 있으면 Empty 안내문 보여주기
         }
         
     }
+    public void PeekOnClicked()
+    {
+        if (storedCount > 0)
+        {
+            //스택 통 길이/2 
+            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(InStack[storedCount - 1].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount - 1].GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
+            PeekPointer.gameObject.SetActive(true);
 
+            //System.Threading.Thread.Sleep(1000);
+            //PeekPointer.gameObject.SetActive(false);
+        } else
+        {
+            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width/2, 120, 0);
+            PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
+
+            PeekPointer.gameObject.SetActive(true);
+
+            //System.Threading.Thread.Sleep(1000);
+            //PeekPointer.gameObject.SetActive(false);
+        }
+    }
     public void EmptyClicked()
     {
         if(storedCount == 0)
@@ -166,7 +182,8 @@ public class PushToStack : MonoBehaviour
             EmptyText.SetActive(true);
             Debug.Log("empty");
             //메시지 다시 지워주기
-            //Invoke("EmptyText.SetActive(false)", 1.0f);
+            System.Threading.Thread.Sleep(10000);
+            EmptyText.SetActive(false);
         } else
         {
             //비어있지 않음!
@@ -249,6 +266,5 @@ public class PushToStack : MonoBehaviour
         Car carScript = GameObject.Find("Car").GetComponent<Car>();
         return carScript.flag;
     }
-
 }
 
