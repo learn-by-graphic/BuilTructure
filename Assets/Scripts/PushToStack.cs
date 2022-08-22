@@ -176,6 +176,22 @@ public class PushToStack : MonoBehaviour
             Invoke("PeekPointer.gameObject.SetActive(false)", 10.0f);
         }
     }
+    public void UpdatePeek()
+    {
+        if (storedCount > 0)
+        {
+            //스택 통 길이/2 
+            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(InStack[storedCount - 1].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount - 1].GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
+        }
+        else
+        {
+            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
+        }
+    }
     public void EmptyClicked()
     {
         Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);

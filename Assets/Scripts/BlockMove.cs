@@ -161,7 +161,7 @@ public class BlockMove : MonoBehaviour
                 {
                     System.Threading.Thread.Sleep(100);
                     Debug.Log("스택에 저장 완료!");
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().PeekOnClicked();
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek();
                     break;
                 }
             case 3:     //POP
@@ -169,7 +169,7 @@ public class BlockMove : MonoBehaviour
                     Debug.Log("Pop 완료");
                     newmoveflag = false;
                     Destroy(gameObject);
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().PeekOnClicked();
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek();
                     break;
                 }
         }
