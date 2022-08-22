@@ -12,6 +12,7 @@ public class GridBuildingSystem : MonoBehaviour
     public GridLayout gridLayout;
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
+    public Tilemap Env;
     public Tile green_tile;
     public Tile ground_tile;
     public Tile red_tile;
@@ -21,9 +22,8 @@ public class GridBuildingSystem : MonoBehaviour
     private Building temp;
     private Vector3Int prevPos;
     private BoundsInt prevArea;
-    private TileBase prevtile; 
-    private bool clickflag = false;
-
+    private TileBase prevtile;
+    private TileBase envtile;
 
     #region Unity Methods
 
@@ -189,8 +189,8 @@ public class GridBuildingSystem : MonoBehaviour
         BoundsInt buildingArea = temp.area;
         
         prevtile = MainTilemap.GetTile(temp.area.position);
-
-        if(prevtile.name == "ground")
+        envtile = Env.GetTile(temp.area.position);
+        if((prevtile.name == "ground") && ReferenceEquals(envtile , null))
         {
             TempTilemap.SetTile(temp.area.position , green_tile);
             MainTilemap.SetTile(temp.area.position, null);
