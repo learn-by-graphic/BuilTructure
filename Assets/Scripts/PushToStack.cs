@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 using UnityEngine.Tilemaps;
 using System.Threading;
+using System;
 
 
 public class PushToStack : MonoBehaviour
@@ -15,11 +16,12 @@ public class PushToStack : MonoBehaviour
     public GameObject prefab; //푸쉬 누르기 직전의 방향 프리팹
 
     public bool moveflag = false;
-    Vector3 startVec = new Vector3(-380, -70, 0);
-    Vector3 arriveVec = new Vector3(370, 250, 0);
+    
+    
 
     //스택 안에 관리
     public GameObject[] InStack = new GameObject[11];
+    public string[] blocknameArr = new string[11];
     public int storedCount=0;  //스택에 들어있는 개수
     public const int MAXCOUNT = 11;
     GameObject StackIndicator; //스택을 담을 공간
@@ -38,19 +40,24 @@ public class PushToStack : MonoBehaviour
     void Update()
     {
     }
+
+
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
     public void MakePrefab(string blockName)        
     {
         if (storedCount < MAXCOUNT)
         {
+            blocknameArr[storedCount] = blockName;
             //프리팹 생성
             //Euler(0, 180.0f, 0), GameObject.Find(blockName).transform.rotation  
             prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
             //프리팹 좌표 조정
+            Vector3 startVec = new Vector3(-380, -70, 0);
+            Vector3 arriveVec = GameObject.Find("DstOfMove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            //Vector3 arriveVec = new Vector3(490, 275, 0);
             prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
-            prefab.AddComponent<PushMove>();
-            moveflag = true;
-            prefab.GetComponent<PushMove>().letsMove(moveflag, blockName);
+            prefab.AddComponent<BlockMove>();
+            prefab.GetComponent<BlockMove>().letsMove(1, startVec, arriveVec);
 
             //스택에 옮겨서 저장
             //AtStack(blockName);
@@ -61,26 +68,28 @@ public class PushToStack : MonoBehaviour
         }
     }
 
-    public void AtStack(string blockName)
+    public void AtStack()
     {
         //스택에 들어갈 작은 프리팹 생성
         // 앵커로부터 길이/2 + 아이콘 크기*(밑에 개수)
-        Debug.Log(storedCount.ToString());
         
         //이번에 스택에 들어갈 프리팹                                                                
-        InStack[storedCount] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), StackIndicator.transform.position, Quaternion.identity, StackIndicator.transform);
+        InStack[storedCount] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blocknameArr[storedCount]), StackIndicator.transform.position, Quaternion.identity, StackIndicator.transform);
         InStack[storedCount].transform.SetAsLastSibling();  //UI 상 제일 위에 보이게
         float IconWidth = InStack[storedCount].GetComponent<RectTransform>().rect.width;    //프리팹 크기
+        float StackIndicatorWidth = StackIndicator.GetComponent<RectTransform>().rect.width;    //스택 통의 전체 길이
         //출발 위치 (스택 통 꼭대기)
-        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3((StackIndicator.GetComponent<RectTransform>().rect.width / 2)-IconWidth/2, 0, 0);
-
+        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3((StackIndicatorWidth / 2)-IconWidth/2, 0, 0);
+        entrancePos = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D;
+        
         InStack[storedCount].SetActive(true);
 
-        //스택통따라 움직이기
-        /////////////
-        
         //현재 위치 : 스택통 맨위 -> 수정 위치 : 현 위치 - 스택 통 길이 + 프리팹 크기 + (몇번째인지)
-        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width + IconWidth + IconWidth*storedCount, 0, 0);
+        //InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width + IconWidth + IconWidth*storedCount, 0, 0);
+        Vector3 ArrivePos = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D + new Vector3(-StackIndicatorWidth + IconWidth + IconWidth * storedCount, 0, 0); ;
+
+        InStack[storedCount].AddComponent<BlockMove>();
+        InStack[storedCount].GetComponent<BlockMove>().letsMove(2, entrancePos, ArrivePos);
 
         //InStack[storedCount].GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
@@ -101,37 +110,50 @@ public class PushToStack : MonoBehaviour
     {
         Debug.Log("(Pop 전) 스택에 담긴 개수 : " + storedCount.ToString());
         //날아가는 모션 추가
-        /////////////
-        //제거
-        storedCount--;
-        Car Car = GameObject.Find("Car").GetComponent<Car>();
-        Debug.Log(InStack[storedCount].ToString());
-        switch (InStack[storedCount].tag)
+        if(storedCount>0)
         {
-            case "UpPrefab":
-                {
-                    Car.carMoveDown();
-                    break;
-                }
-            case "DownPrefab":
-                {
-                    Car.carMoveUp();
-                    break;
-                }
-            case "RightPrefab":
-                {
-                    Car.carMoveLeft();
-                    break;
-                }
-            case "LeftPrefab":
-                {
-                    Car.carMoveRight();
-                    break;
-                }
-        } 
+            storedCount--;  //스택에 저장된 개수 -1
 
-        Destroy(InStack[storedCount]);
-        Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
+            Vector3 startVec = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D;
+            Vector3 arriveVec = GameObject.Find("DstOfPop").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            InStack[storedCount].GetComponent<BlockMove>().letsMove(3, startVec, entrancePos);
+
+            /////////////
+            //자동차 이전 움직임으로
+            Car Car = GameObject.Find("Car").GetComponent<Car>();
+            switch (InStack[storedCount].tag)
+            {
+                case "UpPrefab":
+                    {
+                        Car.carMoveDown();
+                        break;
+                    }
+                case "DownPrefab":
+                    {
+                        Car.carMoveUp();
+                        break;
+                    }
+                case "RightPrefab":
+                    {
+                        Car.carMoveLeft();
+                        break;
+                    }
+                case "LeftPrefab":
+                    {
+                        Car.carMoveRight();
+                        break;
+                    }
+            }
+
+
+            //Destroy(InStack[storedCount]);  //프리팹 제거    
+            Array.Clear(blocknameArr, storedCount, 1);
+            Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
+        } else
+        {
+            Debug.Log("스택에 POP 할 수 있는 것이 없음.");
+        }
+        
     }
 
     public void EmptyClicked()

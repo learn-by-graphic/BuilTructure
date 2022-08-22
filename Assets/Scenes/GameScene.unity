@@ -282,7 +282,7 @@ RectTransform:
   - {fileID: 1558464305}
   - {fileID: 405498029}
   m_Father: {fileID: 657569128}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1377,6 +1377,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 458293098}
+  - {fileID: 2041526286}
   - {fileID: 261093955}
   - {fileID: 1427820821}
   - {fileID: 783576789}
@@ -1405,7 +1406,6 @@ MonoBehaviour:
   Target: {fileID: 0}
   m_Speed: 50
   m_HeightArc: 1
-  travelTime: 10
 --- !u!1 &661862260
 GameObject:
   m_ObjectHideFlags: 0
@@ -1833,7 +1833,7 @@ RectTransform:
   m_Children:
   - {fileID: 1036541391}
   m_Father: {fileID: 657569128}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6501,7 +6501,7 @@ RectTransform:
   - {fileID: 661862261}
   - {fileID: 1021309830}
   m_Father: {fileID: 657569128}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7236,7 +7236,7 @@ RectTransform:
   - {fileID: 960428579}
   - {fileID: 367692401}
   m_Father: {fileID: 657569128}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -7453,7 +7453,7 @@ RectTransform:
   - {fileID: 127370214}
   - {fileID: 1697909611}
   m_Father: {fileID: 657569128}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -8638,6 +8638,18 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  blocknameArr:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   storedCount: 0
 --- !u!224 &1697909611 stripped
 RectTransform:
@@ -8881,6 +8893,41 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1993151703}
   m_CullTransparentMesh: 0
+--- !u!1 &2041526285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2041526286}
+  m_Layer: 0
+  m_Name: DstOfPop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2041526286
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2041526285}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.7964072, y: 1.7964072, z: 1.7964072}
+  m_Children: []
+  m_Father: {fileID: 657569128}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -650, y: -400}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &2047344965 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8038668112280063489, guid: be5c3ca8ea384e2499b18ac1dec17f94,
