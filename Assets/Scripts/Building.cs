@@ -20,6 +20,7 @@ public class Building : MonoBehaviour
         {
             return true;
         }
+        Debug.Log("배치할 수 없습니다");
         return false;
     }
 

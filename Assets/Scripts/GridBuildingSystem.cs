@@ -12,24 +12,17 @@ public class GridBuildingSystem : MonoBehaviour
     public GridLayout gridLayout;
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
-
-
+    public Tile green_tile;
+    public Tile ground_tile;
+    public Tile red_tile;
+    public Tile white_tile;
     public static Dictionary<TileType, TileBase> tileBases = new Dictionary<TileType, TileBase>();
 
     private Building temp;
-    private Vector3 prevPos;
+    private Vector3Int prevPos;
     private BoundsInt prevArea;
-
-    //variable for pathfind
-/*    private Vector3Int bottomLeft, topRight, startPos, targetPos;
-    public List<Node> FinalNodeList;
-    public bool allowDiagonal, dontCrossCorner;
-
-    int sizeX, sizeY;
-    Node[,] NodeArray;
-    Node StartNode, TargetNode, CurNode;
-    List<Node> OpenList, ClosedList;*/
-
+    private TileBase prevtile; 
+    private bool clickflag = false;
 
 
     #region Unity Methods
@@ -59,12 +52,15 @@ public class GridBuildingSystem : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (EventSystem.current.IsPointerOverGameObject(0))
+            if (EventSystem.current.IsPointerOverGameObject(-1))
             {
+                // TempTilemap.SetTile(prevPos, null);
+                // MainTilemap.SetTile(prevPos, prevtile);
+                prevPos = new Vector3Int(0,0,0);
                 return;
             }
 
-            if (!temp.Placed)
+            else if (!temp.Placed && temp)
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int cellPos = gridLayout.LocalToCell(touchPos);
@@ -72,11 +68,17 @@ public class GridBuildingSystem : MonoBehaviour
 
                 if (prevPos != cellPos)
                 {
+                    if(prevPos != new Vector3Int(0,0,0))
+                    {
+                        TempTilemap.SetTile(prevPos, null);
+                        MainTilemap.SetTile(prevPos, prevtile);
+                    }
                     temp.transform.localPosition = gridLayout.CellToLocalInterpolated(cellPos +
                         new Vector3(0.5f, 0.5f, 0f));
                     
                     prevPos = cellPos;
                     FollowBuilding();
+                    
                 }
             }
         }
@@ -161,8 +163,10 @@ public class GridBuildingSystem : MonoBehaviour
     {
         if (!temp || temp.Placed)
         {
-            temp = Instantiate(building, new Vector3(0f, -0.72f, 0f), Quaternion.identity).GetComponent<Building>();
-            FollowBuilding();
+            temp = Instantiate(building, new Vector3(-14.15f, 4.19f, 0f), Quaternion.identity).GetComponent<Building>();
+            temp.area.position = gridLayout.WorldToCell(temp.gameObject.transform.position);
+            temp.transform.position += new Vector3(0, 0.46f, 0);
+            //초기 건물 생성위치 지정
         }
         else
         {
@@ -179,53 +183,40 @@ public class GridBuildingSystem : MonoBehaviour
 
     private void FollowBuilding()
     {
-        ClearArea();
 
         temp.area.position = gridLayout.WorldToCell(temp.gameObject.transform.position);
         temp.transform.position += new Vector3(0, 0.46f, 0);
         BoundsInt buildingArea = temp.area;
+        
+        prevtile = MainTilemap.GetTile(temp.area.position);
 
-        TileBase[] baseArray = GetTilesBlock(buildingArea, MainTilemap);
-        int size = baseArray.Length;
-        TileBase[] tileArray = new TileBase[size];
-
-        for (int i = 0; i < baseArray.Length; i++)
+        if(prevtile.name == "ground")
         {
-
-            if (baseArray[i] == tileBases[TileType.Ground])
-            {
-                Debug.Log("tile is ground");
-                tileArray[i] = tileBases[TileType.Green];
-            }
-            else
-            {
-                FillTiles(tileArray, TileType.Red);
-                break;
-            }
+            TempTilemap.SetTile(temp.area.position , green_tile);
+            MainTilemap.SetTile(temp.area.position, null);
         }
-        TempTilemap.SetTilesBlock(buildingArea, tileArray);
+        else
+        {
+            TempTilemap.SetTile(temp.area.position , red_tile);
+            MainTilemap.SetTile(temp.area.position, null);
+        }
         prevArea = buildingArea;
     }
 
     public bool CanTakearea(BoundsInt area)
     {
-        TileBase[] baseArray = GetTilesBlock(area, MainTilemap);
-        foreach (var b in baseArray)
+        TileBase temptile = TempTilemap.GetTile(area.position);
+        if(temptile.name == "green")
         {
-            if (b != tileBases[TileType.Ground])
-            {
-                Debug.Log("여기에 설치할 수 없습니다.");
-                return false;
-            }
+            return true;
         }
-
-        return true;
+        return false;
     }
 
     public void TakeArea(BoundsInt area)
     {
-        SetTilesBlock(area, TileType.Empty, TempTilemap);
-        SetTilesBlock(area, TileType.Green, MainTilemap);
+        TempTilemap.SetTile(area.position, null);
+        MainTilemap.SetTile(area.position, white_tile);
     }
 
     #endregion
