@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: road_asphalt_bitumen(19)
+  m_Name: G_road_y_left
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: ef5af9a76e1e71549aab1091156800d9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

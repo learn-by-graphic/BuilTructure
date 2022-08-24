@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
+
 public class dragIndicator : MonoBehaviour
 {
 
@@ -17,6 +18,7 @@ public class dragIndicator : MonoBehaviour
     public GameObject confirm_button;
     public GameObject method_button;
     public Tile[] tiles; // 0: green ,1: red
+    public Tile[] road_tiles; // 0 : x , 1: y , 2: x_left , 3: x_right , 4: y_left , 5: y_right
 
     private Vector3Int prevPos;
     private Vector3Int startPos, endPos;
@@ -55,7 +57,7 @@ public class dragIndicator : MonoBehaviour
                 {
                     TempTilemap.SetTile(startPos, tiles[0]);
                     MainTilemap.SetTile(startPos, null);
-                    Debug.Log("start: " + startPos);
+                    //Debug.Log("start: " + startPos);
                     cellPos_of_selectedTile.Add(startPos);
                     selectedTile.Add(start_beforetile);
                 }
@@ -64,6 +66,7 @@ public class dragIndicator : MonoBehaviour
                     TempTilemap.SetTile(startPos, tiles[1]);
                     MainTilemap.SetTile(startPos, null);
                     button_clicked = false;
+                    method_button.SetActive(true);
                     start_is_red = true;
                     Debug.Log("Error(start is red) back to initial");
                 }
@@ -106,7 +109,7 @@ public class dragIndicator : MonoBehaviour
                 }
                 else
                 {
-                    print_List_of_path();
+                    //print_List_of_path();
                     confirm_button.SetActive(true);
                 }
                 //need extra button => yes / no 
@@ -226,24 +229,130 @@ public class dragIndicator : MonoBehaviour
         }
         return false;
     }
-    /*
-    bool check_building_connection()
-    {
 
-    }
-    */
 
     public void button_yes()
     {
+        install_roads();
         confirm_button.SetActive(false);
+        cellPos_of_selectedTile.Clear();
+        selectedTile.Clear();
     }
     public void button_no()
     {
         return_initial();
         confirm_button.SetActive(false);
     }
-    void direction_change()
+    void install_roads()
     {
+        if(cellPos_of_selectedTile.Count < 3)
+        {
+            Debug.Log("Error(too short path) can't install road");
+            return;
+        }
+        TempTilemap.SetTile(cellPos_of_selectedTile[0], null);
+        MainTilemap.SetTile(cellPos_of_selectedTile[0], selectedTile[0]); //white
+        TempTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], null);
+        MainTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], selectedTile[selectedTile.Count-1]);
 
+        Vector3Int prev_vec, mid_vec, next_vec, oper_vec;
+        Vector3Int first_dirct, second_dirct;
+        for(int i=0; i<cellPos_of_selectedTile.Count-2; i++) //start , end is white tile
+        {
+            prev_vec = cellPos_of_selectedTile[i];
+            mid_vec = cellPos_of_selectedTile[i + 1];
+            next_vec = cellPos_of_selectedTile[i + 2];
+
+            oper_vec = new Vector3Int(Mathf.Abs(next_vec.x - prev_vec.x) , Mathf.Abs(next_vec.y - prev_vec.y), 0);
+            first_dirct = mid_vec - prev_vec;
+            second_dirct = next_vec - mid_vec;
+
+            if(oper_vec == new Vector3Int(2,0,0))
+            {
+                TempTilemap.SetTile(mid_vec, null);
+                MainTilemap.SetTile(mid_vec, road_tiles[0]);
+            }
+            else if(oper_vec == new Vector3Int(0,2,0))
+            {
+                TempTilemap.SetTile(mid_vec, null);
+                MainTilemap.SetTile(mid_vec, road_tiles[1]);
+            }
+            else if(oper_vec == new Vector3Int(1,1,0)) // move 2 way
+            {
+                if(first_dirct == new Vector3Int(1, 0, 0))
+                {
+                    // 우상단
+                    if(second_dirct == new Vector3Int(0,1,0))
+                    {
+                        //x_left
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[2]);
+                    }
+                    else
+                    {
+                        //x_right
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[3]);
+                    }
+                }
+
+                else if(first_dirct == new Vector3Int(-1, 0, 0))
+                {
+                    //좌하단
+                    if(second_dirct == new Vector3Int(0,1,0))
+                    {
+                        //y_left
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[4]);
+                    }
+                    else
+                    {
+                        //y_right
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[5]);
+                    }
+                }
+                
+                else if(first_dirct == new Vector3Int(0, 1, 0))
+                {
+                    //좌상단
+                    if (second_dirct == new Vector3Int(1, 0, 0))
+                    {
+                        //y_right
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[5]);
+                    }
+                    else
+                    {
+                        //x_right
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[3]);
+                    }
+                }
+                else
+                {
+                    //우하단
+                    if (second_dirct == new Vector3Int(1, 0, 0))
+                    {
+                        //y_left
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[4]);
+                    }
+                    else
+                    {
+                        //x_left
+                        TempTilemap.SetTile(mid_vec, null);
+                        MainTilemap.SetTile(mid_vec, road_tiles[2]);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("Error(wrong vector)");
+                return;
+            }
+        }
+
+        Debug.Log("road length : " + (cellPos_of_selectedTile.Count-2));
     }
 }
