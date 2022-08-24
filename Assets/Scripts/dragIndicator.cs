@@ -14,7 +14,8 @@ public class dragIndicator : MonoBehaviour
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
     public Tilemap Env;
-    public GameObject confirm_button; 
+    public GameObject confirm_button;
+    public GameObject method_button;
     public Tile[] tiles; // 0: green ,1: red
 
     private Vector3Int prevPos;
@@ -50,7 +51,7 @@ public class dragIndicator : MonoBehaviour
 
                 start_beforetile = MainTilemap.GetTile(startPos);
                 start_envtile = Env.GetTile(startPos);
-                if ((start_beforetile.name == "ground") && ReferenceEquals(start_envtile, null)) // start before tile은 차후 white tile과 검사하게 됨
+                if ((start_beforetile.name == "white") && ReferenceEquals(start_envtile, null))
                 {
                     TempTilemap.SetTile(startPos, tiles[0]);
                     MainTilemap.SetTile(startPos, null);
@@ -88,12 +89,20 @@ public class dragIndicator : MonoBehaviour
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int cellPos = gridLayout.LocalToCell(touchPos);
                 endPos = cellPos;
-                
+                TileBase endtile = selectedTile[selectedTile.Count-1];
+
+                if(endtile.name != "white")
+                {
+                    TempTilemap.SetTile(endPos, tiles[1]);
+                }
 
                 if(has_red_tile()) //white tile에 대한 조건 추가 필요(check_building_connection)
                 {
                     Debug.Log("Error(has red tile) back to initial");
- 
+                }
+                else if(has_diagonal_path())
+                {
+                    Debug.Log("Error(has diagonal tile) back to initial");
                 }
                 else
                 {
@@ -106,6 +115,7 @@ public class dragIndicator : MonoBehaviour
                 // 도로 설치 실패 or 거부의사 -> 타일들을 복귀 시킴 
 
                 button_clicked = false;
+                method_button.SetActive(true);
                 Debug.Log("terminate installing road");
             }
         }
@@ -114,6 +124,7 @@ public class dragIndicator : MonoBehaviour
     public void btn_click()
     {
         this.button_clicked = true;
+        method_button.SetActive(false);
         return_initial();
         Debug.Log("starting install road");
          // 도로 배치 후 false 로 바꿔줘야함
@@ -134,7 +145,7 @@ public class dragIndicator : MonoBehaviour
         if (!ReferenceEquals(nexttile, null))
         {
             selectedTile.Add(nexttile);
-            if ((nexttile.name == "ground") && ReferenceEquals(envtile, null))
+            if (((nexttile.name == "ground")||(nexttile.name == "white")) && ReferenceEquals(envtile, null))
             {
                 TempTilemap.SetTile(next, tiles[0]);
                 MainTilemap.SetTile(next, null);
@@ -198,6 +209,20 @@ public class dragIndicator : MonoBehaviour
             TileBase tmp = TempTilemap.GetTile(cellPos_of_selectedTile[i]);
             if (tmp.name == "red")
                 return true;
+        }
+        return false;
+    }
+    bool has_diagonal_path()
+    {
+        for(int i=0; i<cellPos_of_selectedTile.Count-1; i++)
+        {
+            float mag = Vector3Int.Distance(cellPos_of_selectedTile[i], cellPos_of_selectedTile[i + 1]);
+            if (mag > 1.0f)
+            {
+                TempTilemap.SetTile(cellPos_of_selectedTile[i], tiles[1]);
+                TempTilemap.SetTile(cellPos_of_selectedTile[i+1], tiles[1]);
+                return true;
+            }
         }
         return false;
     }
