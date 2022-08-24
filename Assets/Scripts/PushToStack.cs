@@ -17,18 +17,25 @@ public class PushToStack : MonoBehaviour
     public GameObject[] InStack;
     public string[] blocknameArr;
     public int storedCount;  //스택에 들어있는 개수
-    public const int MAXCOUNT = 11;
-    GameObject StackIndicator; //스택을 담을 공간
-    Vector3 entrancePos;     //스택 통의 꼭대기 (입구의 Y좌표)
+    public const int MAXCOUNT = 20;
+
+
+    GameObject FillArea;    //스택을 담을 공간
+    float FillAreaWidth;    //공간의 너비
+    Vector3 entrancePos;    //스택 통의 꼭대기 (입구의 Y좌표)
 
     private void Awake()
     {
-        storedCount = 0;
-        InStack = new GameObject[11];
-        blocknameArr = new string[11];
-
-        StackIndicator = GameObject.Find("StackIndicator");  //스택을 담을 공간
         Canvas = GameObject.Find("Canvas");
+
+        storedCount = 0;
+        InStack = new GameObject[MAXCOUNT];
+        blocknameArr = new string[MAXCOUNT];
+
+        //AtStack Method
+        FillArea = GameObject.Find("FillArea");  //스택을 담을 공간
+        FillAreaWidth = FillArea.GetComponent<RectTransform>().rect.width;           //스택 통의 전체 길이      (896)
+
     }
     // Start is called before the first frame update
     void Start()
@@ -49,17 +56,21 @@ public class PushToStack : MonoBehaviour
     {
         if (storedCount < MAXCOUNT)
         {
-            blocknameArr[storedCount] = blockName;
+            storedCount++;
             //프리팹 생성
             //Euler(0, 180.0f, 0), GameObject.Find(blockName).transform.rotation  
             prefab = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+            //프리팹 크기 조정
+            prefab.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
+            GameObject image = prefab.transform.Find("Image").gameObject;
+            image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
             //프리팹 좌표 조정
-            Vector3 startVec = new Vector3(-380, -70, 0);
-            Vector3 arriveVec = GameObject.Find("DstOfMove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-            //Vector3 arriveVec = new Vector3(490, 275, 0);
+            Vector3 startVec = GameObject.Find("StartPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            Vector3 arriveVec = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
             prefab.GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
+            //프리펩에 무브 함수 달아서 궤적 이동 출발
             prefab.AddComponent<BlockMove>();
-            prefab.GetComponent<BlockMove>().letsMove(1, startVec, arriveVec);
+            prefab.GetComponent<BlockMove>().letsMove(1, startVec, arriveVec, blockName, storedCount-1);
 
             //스택에 옮겨서 저장
             //AtStack(blockName);
@@ -69,50 +80,41 @@ public class PushToStack : MonoBehaviour
             Debug.Log("STACK이 가득 찼으니 POP 또는 EMPTY 해야 함");
         }
     }
-    public void AtStack()
+    //스택에 들어갈 작은 프리팹 생성
+    public void AtStack(string blockname, int arrIndex)
     {
-        //스택에 들어갈 작은 프리팹 생성
-        // 앵커로부터 길이/2 + 아이콘 크기*(밑에 개수)
-        
         //이번에 스택에 들어갈 프리팹                                                                
-        InStack[storedCount] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blocknameArr[storedCount]), StackIndicator.transform.position, Quaternion.identity, StackIndicator.transform);
-        InStack[storedCount].transform.SetAsLastSibling();  //UI 상 제일 위에 보이게
-        float IconWidth = InStack[storedCount].GetComponent<RectTransform>().rect.width;    //프리팹 크기
-        float StackIndicatorWidth = StackIndicator.GetComponent<RectTransform>().rect.width;    //스택 통의 전체 길이
-        //출발 위치 (스택 통 꼭대기)
-        InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3((StackIndicatorWidth / 2)-IconWidth/2, 0, 0);
-        entrancePos = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D;
-        
-        InStack[storedCount].SetActive(true);
+        InStack[arrIndex] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockname), FillArea.transform.position, Quaternion.identity, FillArea.transform);
+        InStack[arrIndex].transform.SetAsLastSibling();  //UI 상 제일 위에 보이게
+        InStack[arrIndex].SetActive(true);
 
-        //현재 위치 : 스택통 맨위 -> 수정 위치 : 현 위치 - 스택 통 길이 + 프리팹 크기 + (몇번째인지)
-        //InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width + IconWidth + IconWidth*storedCount, 0, 0);
-        Vector3 ArrivePos = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D + new Vector3(-StackIndicatorWidth + IconWidth + IconWidth * storedCount, 0, 0); ;
-
-        InStack[storedCount].AddComponent<BlockMove>();
-        InStack[storedCount].GetComponent<BlockMove>().letsMove(2, entrancePos, ArrivePos);
+        //현재 위치 : 스택통 맨위 -> 수정 위치 : 현 위치 - 스택 통 길이 + 프리팹 크기 + 스택 통 두께 + (몇번째인지)
+        float IconWidth = InStack[arrIndex].GetComponent<RectTransform>().sizeDelta.x;    //프리팹 크기    (44)
+        InStack[arrIndex].GetComponent<RectTransform>().anchoredPosition3D += new Vector3((FillAreaWidth / 2) - IconWidth / 2, 0, 0);
+        entrancePos = InStack[arrIndex].GetComponent<RectTransform>().anchoredPosition3D;
+        //도착 위치
+        Vector3 ArrivePos = InStack[arrIndex].GetComponent<RectTransform>().anchoredPosition3D + new Vector3(-FillAreaWidth + 8 + IconWidth * (arrIndex+1), 0, 0); //(0일 떄 -418 )
+        InStack[arrIndex].AddComponent<BlockMove>();
+        InStack[arrIndex].GetComponent<BlockMove>().letsMove(2, entrancePos, ArrivePos, arrIndex);
 
         //InStack[storedCount].GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0);
         //InStack[storedCount].GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0);
-        storedCount++;
 
-        Debug.Log("(스택에 저장 후) 스택에 담긴 개수 : " + storedCount.ToString());
         //Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
     }
 
     public void PopOnClicked()
     {
         Canvas.transform.Find("MoveGroup").gameObject.SetActive(false);
-        Debug.Log("(Pop 전) 스택에 담긴 개수 : " + storedCount.ToString());
         //날아가는 모션 추가
         if(storedCount>0)
         {
             storedCount--;  //스택에 저장된 개수 -1
 
             Vector3 startVec = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D;
-            Vector3 arriveVec = GameObject.Find("DstOfPop").transform.GetComponent<RectTransform>().anchoredPosition3D;
-            InStack[storedCount].GetComponent<BlockMove>().letsMove(3, startVec, entrancePos);
+            Vector3 arriveVec = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            InStack[storedCount].GetComponent<BlockMove>().letsMove(3, startVec, entrancePos, storedCount);
 
             /////////////
             //자동차 이전 움직임으로
@@ -142,12 +144,12 @@ public class PushToStack : MonoBehaviour
             }
             //Destroy(InStack[storedCount]);  //프리팹 제거    
             System.Array.Clear(blocknameArr, storedCount, 1);
-            Debug.Log("(Pop 후) 스택에 담긴 개수 : " + storedCount.ToString());
             //PeekOnClicked();    //피크 갱신
         } else
         {
             Debug.Log("스택에 POP 할 수 있는 것이 없음.");
             EmptyClicked();     //비어 있으면 Empty 안내문 보여주기
+            UpdatePeek(storedCount);
         }
         
     }
@@ -157,8 +159,8 @@ public class PushToStack : MonoBehaviour
         if (storedCount > 0)
         {
             //스택 통 길이/2 
-            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(InStack[storedCount - 1].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount - 1].GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount].GetComponent<RectTransform>().rect.width / 2, -30, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
             PeekPointer.gameObject.SetActive(true);
 
@@ -166,8 +168,8 @@ public class PushToStack : MonoBehaviour
             //PeekPointer.gameObject.SetActive(false);
         } else
         {
-            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width/2, 120, 0);
+            GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(-FillArea.GetComponent<RectTransform>().rect.width/2+8, -30, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
 
             PeekPointer.gameObject.SetActive(true);
@@ -176,19 +178,19 @@ public class PushToStack : MonoBehaviour
             Invoke("PeekPointer.gameObject.SetActive(false)", 10.0f);
         }
     }
-    public void UpdatePeek()
+    public void UpdatePeek(int arrIndex)
     {
         if (storedCount > 0)
         {
             //스택 통 길이/2 
-            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(InStack[storedCount - 1].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount - 1].GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(InStack[arrIndex].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[arrIndex].GetComponent<RectTransform>().rect.width / 2, -30, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
         }
         else
         {
-            GameObject PeekPointer = GameObject.Find("StackIndicator").transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(-StackIndicator.GetComponent<RectTransform>().rect.width / 2, 120, 0);
+            GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
+            Vector3 PeekPos = new Vector3(-FillArea.GetComponent<RectTransform>().rect.width / 2, 200, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
         }
     }

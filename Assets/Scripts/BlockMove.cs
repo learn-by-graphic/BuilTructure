@@ -4,47 +4,72 @@ using UnityEngine;
 
 public class BlockMove : MonoBehaviour
 {
+    int arrIndex = 0;  //궤적이동이 끝난 후 몇 번째로 나가는 오브젝트인지.
+    public string[] blocknameArr = new string [20];
     //string blockname;
-    short isStart = 0;     //어떤 걸 이동할 건지
-    bool newmoveflag = false;
+    int isStart;     //어떤 걸 이동할 건지
+    bool newmoveflag;
 
     public RectTransform Target;       //도착지
 
     public float m_Speed = 1000.0f;  //450
-    public float m_HeightArc = 120.0f;
+    public float m_HeightArc = -120.0f;
     Vector3 startpos;
     Vector3 targetpos;
-    Vector3 startVec = new Vector3(-380, -70, 0);
-    Vector3 targetVec = new Vector3(370, 250, 0);
 
-    public void letsMove(short moveIndex, Vector3 start, Vector3 arrive)
+    public void letsMove(int moveIndex, Vector3 start, Vector3 arrive, string blockname, int arrindex)
     {
+        arrIndex = arrindex;
+        blocknameArr[arrIndex] = blockname;    //들어온 
         isStart = moveIndex;
         startpos = VecRound(start);
         targetpos = VecRound(arrive);
+    }
+    public void letsMove(int moveIndex, Vector3 start, Vector3 arrive, int arrindex)
+    {
+        arrIndex = arrindex;
+        isStart = moveIndex;
+        startpos = VecRound(start);
+        targetpos = VecRound(arrive);
+    }
 
-        /*
-        switch (isStart)
+    void Arrived(int moveIndex)   //목적지에 도착했을 때
+    {
+        isStart = 0;
+        switch (moveIndex)
         {
-            case 1:     //방향키 블록이 스택 통까지 날아가는 움직임
+            case 1:     //스택통 입구에 도착
                 {
-                    startpos = VecRound(start);
-                    targetpos = VecRound(arrive);
-                    Debug.Log("Move Index :" + moveIndex);
+                    //System.Threading.Thread.Sleep(100);
+                    Destroy(gameObject);
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().AtStack(blocknameArr[arrIndex], arrIndex);
+
                     break;
                 }
-            case 2:     //스택통 맨 위에서 아래로 떨어지는 움직임
+            case 2:     //스택통에 도착한 경우.
                 {
-                    startpos = VecRound(start);
-                    targetpos = VecRound(arrive);
-                    Debug.Log("Move Index :" + moveIndex + start + arrive);
+                    //System.Threading.Thread.Sleep(100);
+                    Debug.Log("(스택에 Push 완료!) 개수: " + (arrIndex + 1)); 
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek(arrIndex);
+                    break;
+                }
+            case 3:     //POP
+                {
+
+                    Debug.Log("(Pop 완료!) 스택에 담긴 개수 : " + arrIndex);
+                    newmoveflag = false;
+                    Destroy(gameObject);
+                    System.Array.Clear(blocknameArr, arrIndex, 1);
+                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek(arrIndex);
                     break;
                 }
         }
-        */
+        return;
     }
     private void Awake()
     {
+        isStart = 0;     //어떤 걸 이동할 건지
+        newmoveflag = false;
     }
     void Start()
     {
@@ -68,7 +93,6 @@ public class BlockMove : MonoBehaviour
 
                     if (nextPosition == targetpos)
                     {
-
                         Arrived(isStart);
                         return;
                     }
@@ -109,19 +133,23 @@ public class BlockMove : MonoBehaviour
                         //꼭대기에 오면 밖으로 이동
                         if (VecRound(nextPosition) == VecRound(targetpos)) {
 
-                            System.Threading.Thread.Sleep(100);
+                            //System.Threading.Thread.Sleep(100);
                             newmoveflag = true; //스택통 바깥 움직임을 제어할 플래그
-                            transform.parent = GameObject.Find("Canvas").transform; //스택인디케이터 안에 있던 오브젝트를 캔버스 하위 오브젝트로 변경
-                            transform.GetComponent<RectTransform>().anchoredPosition3D = GameObject.Find("DstOfMove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-                            //크기 확대
-                            transform.GetComponent<RectTransform>().sizeDelta = new Vector2(150, 150);
-                            transform.Find("Image").GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
+
+                            //오브젝트 하이라키 조정 (스택통 안에 들어있던 블록을 바깥으로 꺼내는 의미)
+                            transform.SetParent(GameObject.Find("Canvas").transform, false); //스택인디케이터 안에 있던 오브젝트를 캔버스 하위 오브젝트로 변경
+                            //출발점
+                            transform.GetComponent<RectTransform>().anchoredPosition3D = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+                            //프리팹 크기 조정
+                            transform.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
+                            GameObject image = transform.transform.Find("Image").gameObject;
+                            image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
                         }
                     }
                     else                 //스택 꼭대기 -> 밖으로 이동
                     {
-                        Vector3 newStartPos = GameObject.Find("DstOfMove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-                        Vector3 newTargetPos = GameObject.Find("DstOfPop").transform.GetComponent<RectTransform>().anchoredPosition3D;
+                        Vector3 newStartPos = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+                        Vector3 newTargetPos = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                         float newx0 = newStartPos.x;      //출발 x
                         float newx1 = newTargetPos.x;     //도착 x
                         float newdistance = newx1 - newx0;   //x좌표 거리 차이
@@ -133,9 +161,8 @@ public class BlockMove : MonoBehaviour
                         //transform.rotation = LookAt2D(nextPosition - transform.position);
                         transform.GetComponent<RectTransform>().anchoredPosition3D = newnextPosition;
 
-                        if (newnextPosition == newTargetPos)
+                        if (newnextPosition == newTargetPos)    //최종 목적지 도착
                         {
-                            Debug.Log("최종목적지 도착");
                             Arrived(isStart);
                             return;
                         }
@@ -143,37 +170,6 @@ public class BlockMove : MonoBehaviour
                     break;
                 }
         }
-    }
-    void Arrived(short moveIndex)   //목적지에 도착했을 때
-    {
-        isStart = 0;
-        switch (moveIndex)
-        {
-            case 1:     //방향키 블록이 스택 통까지 날아가는 움직임
-                {
-                    System.Threading.Thread.Sleep(100);
-                    Destroy(gameObject);
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().AtStack();
-
-                    break;
-                }
-            case 2:     //스택통 맨 위에서 아래로 떨어지는 움직임
-                {
-                    System.Threading.Thread.Sleep(100);
-                    Debug.Log("스택에 저장 완료!");
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek();
-                    break;
-                }
-            case 3:     //POP
-                {
-                    Debug.Log("Pop 완료");
-                    newmoveflag = false;
-                    Destroy(gameObject);
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek();
-                    break;
-                }
-        }
-        return;
     }
     Vector3 VecRound(Vector3 org)       //벡터 반올림
     {

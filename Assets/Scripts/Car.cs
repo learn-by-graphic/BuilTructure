@@ -56,7 +56,7 @@ public class Car : MonoBehaviour
         Vector3Int cellPosition = Road.WorldToCell(transform.position);
         cellPosition += vec * steps;
         
-        if (!Road.HasTile(cellPosition) || GameObject.Find("Button_push").GetComponent<PushToStack>().storedCount >= 11)
+        if (!Road.HasTile(cellPosition) || GameObject.Find("Button_push").GetComponent<PushToStack>().storedCount >= 20)
         {
             cellPosition -= vec * steps;
             Debug.Log("이동불가");
@@ -67,8 +67,6 @@ public class Car : MonoBehaviour
         setWhiteTile(cellPosition , vec);
         transform.position = Road.GetCellCenterWorld(cellPosition) + (Vector3.up * 0.62f);
         flag = true;
-
-
 
         if (cellPosition == dstpoint)
         {
