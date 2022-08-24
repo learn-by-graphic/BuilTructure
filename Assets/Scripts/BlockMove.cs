@@ -13,7 +13,7 @@ public class BlockMove : MonoBehaviour
     public RectTransform Target;       //도착지
 
     public float m_Speed = 1000.0f;  //450
-    public float m_HeightArc = -120.0f;
+    public float m_HeightArc = -150.0f;
     Vector3 startpos;
     Vector3 targetpos;
 
@@ -60,7 +60,6 @@ public class BlockMove : MonoBehaviour
                     newmoveflag = false;
                     Destroy(gameObject);
                     System.Array.Clear(blocknameArr, arrIndex, 1);
-                    GameObject.Find("Button_push").GetComponent<PushToStack>().UpdatePeek(arrIndex);
                     break;
                 }
         }

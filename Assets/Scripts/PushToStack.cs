@@ -36,6 +36,12 @@ public class PushToStack : MonoBehaviour
         FillArea = GameObject.Find("FillArea");  //스택을 담을 공간
         FillAreaWidth = FillArea.GetComponent<RectTransform>().rect.width;           //스택 통의 전체 길이      (896)
 
+        //픽포인터
+        GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
+        Vector3 PeekPos = new Vector3(-FillArea.GetComponent<RectTransform>().rect.width / 2 + 8, -30, 0);
+        PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
+        PeekPointer.SetActive(false);
+
     }
     // Start is called before the first frame update
     void Start()
@@ -49,6 +55,7 @@ public class PushToStack : MonoBehaviour
     public void PushOnClicked()
     {
         Canvas.transform.Find("MoveGroup").gameObject.SetActive(true);
+        FillArea.transform.Find("PeekPointer").gameObject.SetActive(true);
         //
     }
     //프리팹 - 클릭된 방향의 아이템 생성 (스택으로 들어갈 친구 만들기)
@@ -111,6 +118,7 @@ public class PushToStack : MonoBehaviour
         if(storedCount>0)
         {
             storedCount--;  //스택에 저장된 개수 -1
+            UpdatePeek(storedCount-1);
 
             Vector3 startVec = InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D;
             Vector3 arriveVec = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
@@ -190,9 +198,14 @@ public class PushToStack : MonoBehaviour
         else
         {
             GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(-FillArea.GetComponent<RectTransform>().rect.width / 2, 200, 0);
+            Vector3 PeekPos = new Vector3(-FillArea.GetComponent<RectTransform>().rect.width / 2 + 8, -30, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
         }
+    }
+    public void EmptyDestroy()
+    {
+        GameObject EmptyText = Canvas.transform.Find("MessageEmpty").gameObject;
+        EmptyText.SetActive(false);
     }
     public void EmptyClicked()
     {
@@ -206,11 +219,11 @@ public class PushToStack : MonoBehaviour
             Debug.Log("empty");
             //메시지 다시 지워주기
             //System.Threading.Thread.Sleep(10000);
-            Invoke("EmptyText.SetActive(false)", 10.0f);
-            
+            Invoke("EmptyDestroy", 3.0f);
         } else
         {
             //비어있지 않음!
+            Debug.Log("비어있지 않음");
         }
 
         /*
