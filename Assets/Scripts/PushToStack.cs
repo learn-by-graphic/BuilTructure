@@ -168,7 +168,7 @@ public class PushToStack : MonoBehaviour
         {
             //스택 통 길이/2 
             GameObject PeekPointer = FillArea.transform.Find("PeekPointer").gameObject;
-            Vector3 PeekPos = new Vector3(InStack[storedCount].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount].GetComponent<RectTransform>().rect.width / 2, -30, 0);
+            Vector3 PeekPos = new Vector3(InStack[storedCount-1].GetComponent<RectTransform>().anchoredPosition3D.x + InStack[storedCount-1].GetComponent<RectTransform>().rect.width / 2, -30, 0);
             PeekPointer.GetComponent<RectTransform>().anchoredPosition3D = PeekPos;
             PeekPointer.gameObject.SetActive(true);
 
