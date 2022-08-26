@@ -14,8 +14,8 @@ public class Queue_commands : MonoBehaviour
 
     private static int count = 0;
     private int size = 20; // width 에 따라 변경?
-    private int i = 0;
-    private int[] queue; // 0 :up , 1: right , 2: left , 3: down
+
+    private GameObject[] queue; // 0 :up , 1: right , 2: left , 3: down
 
     GameObject FillArea;    //스택을 담을 공간
     float FillAreaWidth;    //공간의 너비
@@ -23,8 +23,10 @@ public class Queue_commands : MonoBehaviour
 
     void Awake()
     {
+        //Car
+        car = GameObject.Find("Car");
         prefabs = new GameObject[4];
-        queue = new int[size];
+        queue = new GameObject[size];
 
         //AtStack Method
         FillArea = GameObject.Find("FillArea");  //스택을 담을 공간
@@ -34,20 +36,19 @@ public class Queue_commands : MonoBehaviour
     public void createBlock(string blockName, int prefabIndex)
     {
         count++;
-        prefabs[prefabIndex] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+        queue[count-1] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
         //프리팹 크기 조정
-        prefabs[prefabIndex].GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
-        GameObject image = prefabs[prefabIndex].transform.Find("Image").gameObject;
+        queue[count-1].GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
+        GameObject image = queue[count-1].transform.Find("Image").gameObject;
         image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
         //프리팹 좌표 조정
         Vector3 startVec = GameObject.Find("StartInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
         Vector3 arriveVec = GameObject.Find("DstInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-        prefabs[prefabIndex].GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
+        queue[count-1].GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
         //프리펩에 무브 함수 달아서 궤적 이동 출발
-        prefabs[prefabIndex].AddComponent<BlockMove>();
-        prefabs[prefabIndex].GetComponent<BlockMove>().letsMove(4, startVec, arriveVec, blockName, count - 1);
+        queue[count-1].AddComponent<BlockMove>();
+        queue[count-1].GetComponent<BlockMove>().letsMove(4, startVec, arriveVec, blockName, count - 1);
 
-        queue[count - 1] = prefabIndex;
     }
     public void BlockToQueue(GameObject block, int arrIndex)      //블록이 큐로 들어온 이후
     {
@@ -67,31 +68,62 @@ public class Queue_commands : MonoBehaviour
         block.AddComponent<BlockMove>();
         block.GetComponent<BlockMove>().letsMove(5, entrancePos, ArrivePos, arrIndex);
     }
-    public void BtnOnClicked()
+    public void BtnOnClicked()      //꺼내는 버튼 눌렀을 때
     {
-        //꺼내는 버튼 눌렀을 때
-        //카 무브
-        //큐 정렬 (옆으로 한칸씩 이동)
+        if (count > 0)
+        {
+            count--;
+            //카 무브
+            switch (queue[0].tag)
+            {
+                case "UpPrefab":
+                    car.GetComponent<Car_Queue>().carMoveUp();
+                    break;
+                case "RightPrefab":
+                    car.GetComponent<Car_Queue>().carMoveRight();
+                    break;
+                case "LeftPrefab":
+                    car.GetComponent<Car_Queue>().carMoveLeft();
+                    break;
+                case "DownPrefab":
+                    car.GetComponent<Car_Queue>().carMoveDown();
+                    break;
+            }
+            
+            //젤 앞에 꺼 버리는 궤적 이동
+            Vector3 startVec = GameObject.Find("StartOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            Vector3 arriveVec = GameObject.Find("DstOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            queue[0].transform.SetParent(GameObject.Find("Canvas").transform);
+            queue[0].GetComponent<RectTransform>().anchoredPosition3D = startVec;
+            queue[0].GetComponent<BlockMove>().letsMove(6, startVec, arriveVec);
+            //***필요하면 크기 조정
+            //큐 정렬 (옆으로 한칸씩 이동)
+            for (int i = 0; i < count; i++)
+            {
+                queue[i] = queue[i + 1];
+                queue[i].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(44, 0, 0);
+            }
+        }
     }
     
 
     public void move_car()
     {
-        
-        if(i <= count-1)
+        int i = 0;
+        if (i <= count-1)
         {
-            switch (queue[i])
+            switch (queue[i].tag)
             {
-                case 0:
+                case "UpPrefab":
                     car.GetComponent<Car_Queue>().carMoveUp();
                     break;
-                case 1:
+                case "RightPrefab":
                     car.GetComponent<Car_Queue>().carMoveRight();
                     break;
-                case 2:
+                case "DownPrefab":
                     car.GetComponent<Car_Queue>().carMoveLeft();
                     break;
-                case 3:
+                case "LeftPrefab":
                     car.GetComponent<Car_Queue>().carMoveDown();
                     break;
             }

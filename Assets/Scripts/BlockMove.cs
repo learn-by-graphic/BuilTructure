@@ -32,6 +32,12 @@ public class BlockMove : MonoBehaviour
         startpos = VecRound(start);
         targetpos = VecRound(arrive);
     }
+    public void letsMove(int moveIndex, Vector3 start, Vector3 arrive)
+    {
+        isStart = moveIndex;
+        startpos = VecRound(start);
+        targetpos = VecRound(arrive);
+    }
 
     void Arrived(int moveIndex)   //목적지에 도착했을 때
     {
@@ -69,7 +75,12 @@ public class BlockMove : MonoBehaviour
                 }
             case 5:
                 {
-                    Debug.Log("Queue에 Push 완료! 개수: " + arrIndex);
+                    Debug.Log("Queue에 Push 완료! 개수: " + (arrIndex+1));
+                    break;
+                }
+            case 6:
+                {
+                    Destroy(gameObject);
                     break;
                 }
         }
@@ -85,12 +96,21 @@ public class BlockMove : MonoBehaviour
     }
     void Update()
     {
-        if(isStart == 1 || isStart == 4)
+        if(isStart == 1 || isStart == 4 || isStart == 6)
         {
-            if(isStart == 4)
+            if (isStart == 1)
             {
-                m_Speed = 100.0f;  //450
+                m_Speed = 1000.0f;  //450
+                m_HeightArc = -150.0f;
+            }
+            else if(isStart == 4)
+            {
+                m_Speed = 200.0f;  //450
                 m_HeightArc = -90.0f;
+            } else if (isStart == 6)
+            {
+                m_Speed = 500.0f;  //450
+                m_HeightArc = -150.0f;
             }
             float x0 = startpos.x;      //출발 x
             float x1 = targetpos.x;     //도착 x
@@ -129,6 +149,7 @@ public class BlockMove : MonoBehaviour
             if (!newmoveflag)       //현 위치에서 스택 꼭대기로 이동
 
             {
+                m_Speed = 500.0f;
                 Vector3 TransVec = transform.GetComponent<RectTransform>().anchoredPosition3D;
                 float x0 = startpos.x;
                 float x1 = targetpos.x;
@@ -157,6 +178,7 @@ public class BlockMove : MonoBehaviour
             }
             else                 //스택 꼭대기 -> 밖으로 이동
             {
+                m_Speed = 1000.0f;
                 Vector3 newStartPos = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                 Vector3 newTargetPos = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                 float newx0 = newStartPos.x;      //출발 x
