@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
 public class PushToStack : MonoBehaviour
 {
 
@@ -50,6 +48,69 @@ public class PushToStack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+    }
+    //각 화살표 방향이 클릭 되었을 때 걔네 정보를 가져올 Onclick 함수
+    public void MoveUpOnClicked()
+    {
+        //시작전에 이미 있는 프리펩 지우기
+        Debug.Log("UP 버튼 누름");
+        //Car의 flag 가져오기
+        if (CanMove())
+        {
+            MakePrefab("upblock");
+        }
+        else
+        {
+            Debug.Log("프리팹 생성 실패");
+        }
+    }
+    public void MoveDownOnClicked()
+    {
+        //SelectedMove = GameObject.Find("downblock");
+        Debug.Log("Down 버튼 누름");
+        //Car의 flag 가져오기
+        if (CanMove())
+        {
+            MakePrefab("downblock");
+        }
+        else
+        {
+            Debug.Log("프리팹 생성 실패");
+        }
+    }
+    public void MoveRightOnClicked()
+    {
+        //SelectedMove = GameObject.Find("rightblock");
+        Debug.Log("Right 버튼 누름");
+        //Car의 flag 가져오기
+        if (CanMove())
+        {
+            MakePrefab("rightblock");
+        }
+        else
+        {
+            Debug.Log("프리팹 생성 실패");
+        }
+    }
+    public void MoveLeftOnClicked()
+    {
+        //SelectedMove = GameObject.Find("leftblock");
+        Debug.Log("Left 버튼 누름");
+        //Car의 flag 가져오기
+        if (CanMove())
+        {
+            MakePrefab("leftblock");
+        }
+        else
+        {
+            Debug.Log("프리팹 생성 실패");
+        }
+    }
+    //사용자가 동작한 방향이 길이 나있어서 이동할 수 있는 길인지
+    public bool CanMove()
+    {
+        Car carScript = GameObject.Find("Car").GetComponent<Car>();
+        return carScript.flag;
     }
     //Push Btn OnClick 될 때 동작시킬 함수
     public void PushOnClicked()
@@ -240,68 +301,6 @@ public class PushToStack : MonoBehaviour
         */
     }
 
-    //각 화살표 방향이 클릭 되었을 때 걔네 정보를 가져올 Onclick 함수
-    public void MoveUpOnClicked()
-    {
-        //시작전에 이미 있는 프리펩 지우기
-        Debug.Log("UP 버튼 누름");
-        //Car의 flag 가져오기
-        if (CanMove())
-        {
-            MakePrefab("upblock");
-        }
-        else
-        {
-            Debug.Log("프리팹 생성 실패");
-        }
-    }
-    public void MoveDownOnClicked()
-    {
-        //SelectedMove = GameObject.Find("downblock");
-        Debug.Log("Down 버튼 누름");
-        //Car의 flag 가져오기
-        if (CanMove())
-        {
-            MakePrefab("downblock");
-        }
-        else
-        {
-            Debug.Log("프리팹 생성 실패");
-        }
-    }
-    public void MoveRightOnClicked()
-    {
-        //SelectedMove = GameObject.Find("rightblock");
-        Debug.Log("Right 버튼 누름");
-        //Car의 flag 가져오기
-        if (CanMove())
-        {
-            MakePrefab("rightblock");
-        }
-        else
-        {
-            Debug.Log("프리팹 생성 실패");
-        }
-    }
-    public void MoveLeftOnClicked()
-    {
-        //SelectedMove = GameObject.Find("leftblock");
-        Debug.Log("Left 버튼 누름");
-        //Car의 flag 가져오기
-        if (CanMove())
-        {
-            MakePrefab("leftblock");
-        }
-        else
-        {
-            Debug.Log("프리팹 생성 실패");
-        }
-    }
-    //사용자가 동작한 방향이 길이 나있어서 이동할 수 있는 길인지
-    public bool CanMove()
-    {
-        Car carScript = GameObject.Find("Car").GetComponent<Car>();
-        return carScript.flag;
-    }
+
 }
 
