@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
+using System.Threading;
 
 
 public class dragIndicator : MonoBehaviour
@@ -36,14 +37,25 @@ public class dragIndicator : MonoBehaviour
     }
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            return_initial();
+            if (start_is_red)
+            {
+                MainTilemap.SetTile(startPos, start_beforetile);
+                TempTilemap.SetTile(startPos, null);
+                start_is_red = false;
+            }
+            cellPos_of_selectedTile.Clear();
+            selectedTile.Clear();
+        }
         if (EventSystem.current.IsPointerOverGameObject(-1))
         {
             return;
         }
         if (button_clicked)
-        {
-            
-            
+        {        
+
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -69,6 +81,7 @@ public class dragIndicator : MonoBehaviour
                     method_button.SetActive(true);
                     start_is_red = true;
                     Debug.Log("Error(start is red) back to initial");
+                    Debug.Log("press esc key or install road button");
                 }
             }
             if (Input.GetMouseButton(0))
@@ -102,10 +115,13 @@ public class dragIndicator : MonoBehaviour
                 if(has_red_tile()) //white tile에 대한 조건 추가 필요(check_building_connection)
                 {
                     Debug.Log("Error(has red tile) back to initial");
+                    Debug.Log("press esc key or install road button");
                 }
                 else if(has_diagonal_path())
                 {
                     Debug.Log("Error(has diagonal tile) back to initial");
+                    Debug.Log("press esc key or install road button");
+
                 }
                 else
                 {
@@ -119,7 +135,7 @@ public class dragIndicator : MonoBehaviour
 
                 button_clicked = false;
                 method_button.SetActive(true);
-                Debug.Log("terminate installing road");
+                Debug.Log("terminated installing road");
             }
         }
     }
@@ -129,7 +145,7 @@ public class dragIndicator : MonoBehaviour
         this.button_clicked = true;
         method_button.SetActive(false);
         return_initial();
-        Debug.Log("starting install road");
+        Debug.Log("started installing road");
          // 도로 배치 후 false 로 바꿔줘야함
         if(start_is_red)
         {
@@ -248,6 +264,10 @@ public class dragIndicator : MonoBehaviour
         if(cellPos_of_selectedTile.Count < 3)
         {
             Debug.Log("Error(too short path) can't install road");
+            TempTilemap.SetTile(cellPos_of_selectedTile[0], null);
+            MainTilemap.SetTile(cellPos_of_selectedTile[0], selectedTile[0]); //white
+            TempTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], null);
+            MainTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], selectedTile[selectedTile.Count - 1]);
             return;
         }
         TempTilemap.SetTile(cellPos_of_selectedTile[0], null);
@@ -349,6 +369,7 @@ public class dragIndicator : MonoBehaviour
             else
             {
                 Debug.Log("Error(wrong vector)");
+                Debug.Log("press esc key or install road button");
                 return;
             }
         }

@@ -9,6 +9,8 @@ public class GridBuildingSystem : MonoBehaviour
 {
     public static GridBuildingSystem current;
 
+    
+
     public GridLayout gridLayout;
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
@@ -17,11 +19,13 @@ public class GridBuildingSystem : MonoBehaviour
     public Tile[] tiles; //tiles 0: ground / 1: green / 2: red / 3: white
 
     private Building temp;
-    private Vector3Int prevPos;
+    private Vector3Int prevPos= new Vector3Int(-3,7,0);
     private BoundsInt prevArea;
     private TileBase prevtile;
     private TileBase envtile;
 
+    private List<Building> buildings = new List<Building>(); 
+    private bool destroy_building_button = false;
     #region Unity Methods
 
     private void Awake()
@@ -40,12 +44,31 @@ public class GridBuildingSystem : MonoBehaviour
         {
             return;
         }
+        
 
         if (Input.GetMouseButtonDown(0))
         {
+            if(destroy_building_button)
+            {
+                Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                Vector3Int cellPos = gridLayout.LocalToCell(touchPos);
+
+                for(int i=0; i<buildings.Count; i++)
+                {
+                    if(cellPos == buildings[i].area.position)
+                    {
+                        buildings[i].GetComponent<Building>().destroy_building();
+                        MainTilemap.SetTile(cellPos, tiles[0]);
+                        buildings.RemoveAt(i);
+                        destroy_building_button = false;
+                        break;
+                    }
+                }
+            }
             if (EventSystem.current.IsPointerOverGameObject(-1))
             {
-                prevPos = new Vector3Int(0,0,0);
+                prevPos = new Vector3Int(-3, 7, 0);
+                prevtile = MainTilemap.GetTile(prevPos);
                 return;
             }
 
@@ -57,7 +80,7 @@ public class GridBuildingSystem : MonoBehaviour
 
                 if (prevPos != cellPos)
                 {
-                    if(prevPos != new Vector3Int(0,0,0))
+                    if(prevPos != new Vector3Int(-3,7,0))
                     {
                         TempTilemap.SetTile(prevPos, null);
                         MainTilemap.SetTile(prevPos, prevtile);
@@ -94,11 +117,14 @@ public class GridBuildingSystem : MonoBehaviour
             {
                 temp.Place();
                 Debug.Log(temp.area);
+                buildings.Add(temp);
                 BtnGroup.SetActive(true);
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape))
         {
+
+
             if (!temp.Placed)
             {
                 TempTilemap.SetTile(prevPos, null);
@@ -107,46 +133,16 @@ public class GridBuildingSystem : MonoBehaviour
             }
             BtnGroup.SetActive(true);
         }
+
     }
 
     #endregion
 
-    #region Tilemap Management
-
-/*    public static TileBase[] GetTilesBlock(BoundsInt area, Tilemap tilemap)
+    public void destroy_build_button()
     {
-        TileBase[] array = new TileBase[area.size.x * area.size.y];
-        int counter = 0;
-
-        foreach (var v in area.allPositionsWithin)
-        {
-            Vector3Int pos = new Vector3Int(v.x, v.y, 0);
-            array[counter] = tilemap.GetTile(pos);
-            counter++;
-        }
-        Debug.Log(counter);
-        return array;
+        this.destroy_building_button = true;
     }
 
-
-    private static void FillTiles(TileBase[] arr, TileType type)
-    {
-        for (int i = 0; i < arr.Length; i++)
-        {
-            arr[i] = tileBases[type];
-        }
-    }
-
-
-    private static void SetTilesBlock(BoundsInt area, TileType type, Tilemap tilemap)
-    {
-        int size = area.size.x * area.size.y * area.size.z;
-        TileBase[] tileArray = new TileBase[size];
-        FillTiles(tileArray, type);
-        tilemap.SetTilesBlock(area, tileArray);
-    }
-*/
-    #endregion
 
     #region Building Placement
 
@@ -166,6 +162,7 @@ public class GridBuildingSystem : MonoBehaviour
             Debug.Log("현재 건물 먼저 배치해 주세요");
         }
     }
+
 
     private void FollowBuilding()
     {

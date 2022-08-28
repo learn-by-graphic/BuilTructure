@@ -7,7 +7,8 @@ public class Building : MonoBehaviour
 {
     public bool Placed { get; private set; }
     public BoundsInt area;
-    
+
+
     #region Build Methods
 
     public bool CanBePlaced()
@@ -34,4 +35,9 @@ public class Building : MonoBehaviour
     }
 
     #endregion
+
+    public void destroy_building()
+    {
+        Destroy(this.gameObject);
+    }
 }
