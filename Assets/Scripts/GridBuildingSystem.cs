@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
-
+using System;
 
 public class GridBuildingSystem : MonoBehaviour
 {
     public static GridBuildingSystem current;
-
+    
     
 
     public GridLayout gridLayout;
@@ -24,7 +24,7 @@ public class GridBuildingSystem : MonoBehaviour
     private TileBase prevtile;
     private TileBase envtile;
 
-    private List<Building> buildings = new List<Building>(); 
+    private List<Building> buildings; 
     private bool destroy_building_button = false;
     #region Unity Methods
 
@@ -36,16 +36,17 @@ public class GridBuildingSystem : MonoBehaviour
     private void Start()
     {
         //tiles 0: ground / 1: green / 2: red / 3: white
+        
     }
 
     private void Update()
     {
-        if (!temp)
-        {
-            return;
-        }
+        // if (!temp)
+        // {
+        //     return;
+        // }
+        GameObject graphmanager = GameObject.Find("GraphManager");
         
-
         if (Input.GetMouseButtonDown(0))
         {
             if(destroy_building_button)
@@ -53,17 +54,24 @@ public class GridBuildingSystem : MonoBehaviour
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int cellPos = gridLayout.LocalToCell(touchPos);
 
-                for(int i=0; i<buildings.Count; i++)
+                try
                 {
-                    if(cellPos == buildings[i].area.position)
-                    {
-                        buildings[i].GetComponent<Building>().destroy_building();
-                        MainTilemap.SetTile(cellPos, tiles[0]);
-                        buildings.RemoveAt(i);
-                        destroy_building_button = false;
-                        break;
-                    }
+                graphmanager.GetComponent<GraphManager>().SearchBuilding(cellPos).destroy_building();
+
+                graphmanager.GetComponent<GraphManager>().RemoveBuilding(cellPos);
+
+                MainTilemap.SetTile(cellPos, tiles[0]);
                 }
+                catch(NullReferenceException)
+                {
+                    Debug.Log("삭제할 건물이 없습니다");
+                }
+                finally
+                {
+                destroy_building_button = false;
+                }
+
+
             }
             if (EventSystem.current.IsPointerOverGameObject(-1))
             {
@@ -116,8 +124,8 @@ public class GridBuildingSystem : MonoBehaviour
             if (temp.CanBePlaced())
             {
                 temp.Place();
-                Debug.Log(temp.area);
-                buildings.Add(temp);
+                //buildings.Add(temp);
+                graphmanager.GetComponent<GraphManager>().AddBuilding(temp);
                 BtnGroup.SetActive(true);
             }
         }
@@ -141,6 +149,7 @@ public class GridBuildingSystem : MonoBehaviour
     public void destroy_build_button()
     {
         this.destroy_building_button = true;
+
     }
 
 

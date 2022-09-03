@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using System.Threading;
-
+using System.Linq;
 
 public class dragIndicator : MonoBehaviour
 {
 
     private bool button_clicked = false;
+    public GameObject graphmanager;
 
 
     public GridLayout gridLayout;
@@ -48,6 +49,7 @@ public class dragIndicator : MonoBehaviour
             }
             cellPos_of_selectedTile.Clear();
             selectedTile.Clear();
+            method_button.SetActive(true);
         }
         if (EventSystem.current.IsPointerOverGameObject(-1))
         {
@@ -134,8 +136,8 @@ public class dragIndicator : MonoBehaviour
                 // 도로 설치 실패 or 거부의사 -> 타일들을 복귀 시킴 
 
                 button_clicked = false;
-                method_button.SetActive(true);
-                Debug.Log("terminated installing road");
+                
+                //Debug.Log("terminated installing road");
             }
         }
     }
@@ -145,8 +147,7 @@ public class dragIndicator : MonoBehaviour
         this.button_clicked = true;
         method_button.SetActive(false);
         return_initial();
-        Debug.Log("started installing road");
-         // 도로 배치 후 false 로 바꿔줘야함
+        //Debug.Log("started installing road");
         if(start_is_red)
         {
             MainTilemap.SetTile(startPos, start_beforetile);
@@ -250,14 +251,22 @@ public class dragIndicator : MonoBehaviour
     public void button_yes()
     {
         install_roads();
+        graphmanager.GetComponent<GraphManager>().Addroads(cellPos_of_selectedTile[0], cellPos_of_selectedTile[cellPos_of_selectedTile.Count-1],cellPos_of_selectedTile);
+        //graphmanager.GetComponent<GraphManager>().show_every_build();
+        //Debug.Log("----------------------");
+        // Debug.Log("start's road ");
+        // graphmanager.nodes[0].print_my_road();
+        
         confirm_button.SetActive(false);
         cellPos_of_selectedTile.Clear();
         selectedTile.Clear();
+        method_button.SetActive(true);
     }
     public void button_no()
     {
         return_initial();
         confirm_button.SetActive(false);
+        method_button.SetActive(true);
     }
     void install_roads()
     {
@@ -273,10 +282,12 @@ public class dragIndicator : MonoBehaviour
         TempTilemap.SetTile(cellPos_of_selectedTile[0], null);
         MainTilemap.SetTile(cellPos_of_selectedTile[0], selectedTile[0]); //white
         TempTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], null);
-        MainTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], selectedTile[selectedTile.Count-1]);
+        MainTilemap.SetTile(cellPos_of_selectedTile[cellPos_of_selectedTile.Count - 1], selectedTile[selectedTile.Count-1]); // white
 
         Vector3Int prev_vec, mid_vec, next_vec, oper_vec;
         Vector3Int first_dirct, second_dirct;
+
+
         for(int i=0; i<cellPos_of_selectedTile.Count-2; i++) //start , end is white tile
         {
             prev_vec = cellPos_of_selectedTile[i];
@@ -373,7 +384,8 @@ public class dragIndicator : MonoBehaviour
                 return;
             }
         }
-
+        //terminate road install
         Debug.Log("road length : " + (cellPos_of_selectedTile.Count-2));
     }
+
 }
