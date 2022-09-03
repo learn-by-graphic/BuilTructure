@@ -19,7 +19,7 @@ public class dragIndicator : MonoBehaviour
     public Tilemap Env;
     public GameObject confirm_button;
     public GameObject method_button;
-    public Tile[] tiles; // 0: green ,1: red
+    public Tile[] tiles; // 0: green ,1: red , 2: yellow
     public Tile[] road_tiles; // 0 : x , 1: y , 2: x_left , 3: x_right , 4: y_left , 5: y_right
 
     private Vector3Int prevPos;
@@ -113,10 +113,14 @@ public class dragIndicator : MonoBehaviour
                 {
                     TempTilemap.SetTile(endPos, tiles[1]);
                 }
+                else
+                {
+                    TempTilemap.SetTile(endPos, tiles[0]);
+                }
 
                 if(has_red_tile()) //white tile에 대한 조건 추가 필요(check_building_connection)
                 {
-                    Debug.Log("Error(has red tile) back to initial");
+                    Debug.Log("Error(has red(yellow) tile) back to initial");
                     Debug.Log("press esc key or install road button");
                 }
                 else if(has_diagonal_path())
@@ -167,8 +171,17 @@ public class dragIndicator : MonoBehaviour
             selectedTile.Add(nexttile);
             if (((nexttile.name == "ground")||(nexttile.name == "white")) && ReferenceEquals(envtile, null))
             {
+
+                if(nexttile.name == "white")
+                {
+                TempTilemap.SetTile(next, tiles[2]);
+                MainTilemap.SetTile(next, null); 
+                }
+                else
+                {
                 TempTilemap.SetTile(next, tiles[0]);
                 MainTilemap.SetTile(next, null);
+                }
 
             }
             else
@@ -228,6 +241,12 @@ public class dragIndicator : MonoBehaviour
         {
             TileBase tmp = TempTilemap.GetTile(cellPos_of_selectedTile[i]);
             if (tmp.name == "red")
+                return true;
+        }
+        for(int i=1; i<cellPos_of_selectedTile.Count-1; i++)
+        {
+            TileBase tmp = TempTilemap.GetTile(cellPos_of_selectedTile[i]);
+            if (tmp.name == "yellow")
                 return true;
         }
         return false;

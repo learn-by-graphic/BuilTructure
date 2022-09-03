@@ -11537,6 +11537,7 @@ MonoBehaviour:
   tiles:
   - {fileID: 11400000, guid: 1a8cf0b8026e32c42ba0171317e50185, type: 2}
   - {fileID: 11400000, guid: 893e2317bc1ecfe44a868d4738d69861, type: 2}
+  - {fileID: 11400000, guid: 1092f4ca7746ccb4ea8f4bb00c5a5f0e, type: 2}
   road_tiles:
   - {fileID: 11400000, guid: a596512e42f504fe2ad659fba186ca2d, type: 2}
   - {fileID: 11400000, guid: 9eecf52263f654045855858a3204eea4, type: 2}
