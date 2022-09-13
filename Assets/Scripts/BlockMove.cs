@@ -37,6 +37,7 @@ public class BlockMove : MonoBehaviour
         isStart = moveIndex;
         startpos = VecRound(start);
         targetpos = VecRound(arrive);
+
     }
 
     void Arrived(int moveIndex)   //목적지에 도착했을 때
@@ -105,12 +106,16 @@ public class BlockMove : MonoBehaviour
             }
             else if(isStart == 4)
             {
-                m_Speed = 200.0f;  //450
-                m_HeightArc = -90.0f;
+                m_Speed = 450.0f;  //450
+                m_HeightArc = 300.0f;
             } else if (isStart == 6)
             {
-                m_Speed = 500.0f;  //450
-                m_HeightArc = -150.0f;
+                m_Speed = 350.0f;  //450
+                m_HeightArc = 600.0f;
+
+                transform.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
+                GameObject image = transform.Find("Image").gameObject;
+                image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
             }
             float x0 = startpos.x;      //출발 x
             float x1 = targetpos.x;     //도착 x
@@ -179,6 +184,7 @@ public class BlockMove : MonoBehaviour
             else                 //스택 꼭대기 -> 밖으로 이동
             {
                 m_Speed = 1000.0f;
+
                 Vector3 newStartPos = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                 Vector3 newTargetPos = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                 float newx0 = newStartPos.x;      //출발 x
