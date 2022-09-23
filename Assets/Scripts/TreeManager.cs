@@ -11,14 +11,16 @@ public class TreeManager : MonoBehaviour
     public Tile[] T_tiles; //0 : white 1: road_x 2: road_y 3: ground
 
 
-    public int distance_of_cityhall = 3;
+    public int distance_of_cityhall = 5;
     public int distance_of_house = 4;
+    public int distance_of_house2 = 3;
     private Tree_building tmp;
     public Vector3Int cityhall_position = new Vector3Int(0,0,0);
 
     private List<Tree_building> tree = new List<Tree_building>();
     private bool on_build_button = false;
     private bool on_del_button = false;
+    private GameObject arrows;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,8 @@ public class TreeManager : MonoBehaviour
         tmp.m_position = cityhall_position;
         tmp.p_position = new Vector3Int(0,0,0);
         tree.Add(tmp); // root
+        arrows = GameObject.Find("Tree_Arrows");
+        arrows.SetActive(false);
     }
     void Update()
     {
@@ -37,6 +41,8 @@ public class TreeManager : MonoBehaviour
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 Vector3Int cellPos = grid.LocalToCell(touchPos);
                 
+
+
                 build_button(cellPos);
                 on_build_button = false;
             }
@@ -73,6 +79,11 @@ public class TreeManager : MonoBehaviour
             Debug.Log("건물이 설치된 타일만 선택해 주세요");
             return;
         }
+        //arrow active
+        arrows.transform.position = grid.GetCellCenterWorld(cellPos)+new Vector3(0f,0.45f,0f);
+        arrows.SetActive(true);
+
+
         //search tmp node
         for(int i=0; i<tree.Count; i++)
         {
@@ -118,15 +129,15 @@ public class TreeManager : MonoBehaviour
         Vector3Int install_position = new Vector3Int(0,0,0);
         if(tmp.name == "Tree_cityhall(Clone)") 
         {
-            if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , distance_of_cityhall ,0)).name == "ground")
+            if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , 1 ,0)).name == "ground")
             {
                 install_position = tmp.m_position + new Vector3Int(0 , distance_of_cityhall ,0);
             }
-            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , -distance_of_cityhall ,0)).name == "ground")
+            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , -1 ,0)).name == "ground")
             {
                 install_position = tmp.m_position + new Vector3Int(0 , -distance_of_cityhall ,0);
             }
-            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(distance_of_cityhall , 0 ,0)).name == "ground")
+            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(1 , 0 ,0)).name == "ground")
             {
                 install_position = tmp.m_position + new Vector3Int(distance_of_cityhall , 0 ,0);
             }
@@ -166,6 +177,31 @@ public class TreeManager : MonoBehaviour
             tree.Add(installing_node);
             tmp.connected_buildings.Add(install_position);
         }
+        else if(tmp.name == "Tree_house(Clone)")
+        {
+            if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , 1 ,0)).name == "ground")
+            {
+                install_position = tmp.m_position + new Vector3Int(0 , distance_of_house2 ,0);
+            }
+            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(0 , -1 ,0)).name == "ground")
+            {
+                install_position = tmp.m_position + new Vector3Int(0 , -distance_of_house2 ,0);
+            }
+            else if(MainTilemap.GetTile(tmp.m_position + new Vector3Int(1 , 0 ,0)).name == "ground")
+            {
+                install_position = tmp.m_position + new Vector3Int(distance_of_house2 , 0 ,0);
+            }
+            else
+            {
+                install_position = tmp.m_position + new Vector3Int(-distance_of_house2 , 0 ,0);
+            }
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[3], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp.m_position;
+            tree.Add(installing_node);
+            tmp.connected_buildings.Add(install_position);
+        }
         else{ //tmp name == Tree_house
             Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
             return;
@@ -199,6 +235,7 @@ public class TreeManager : MonoBehaviour
     public void del_button(Vector3Int cellPos)
     {
         Tree_building curr_node = null;
+        Tree_building leaf_node = null;
         if(MainTilemap.GetTile(cellPos).name != "white")
         {
             Debug.Log("건물이 설치된 타일만 선택해 주세요");
@@ -219,7 +256,34 @@ public class TreeManager : MonoBehaviour
         {
             Vector3Int removed_pos = curr_node.connected_buildings[i];
             MainTilemap.SetTile(removed_pos ,T_tiles[3]);
+            for(int o=0; o<tree.Count; o++)
+            {
+                if(tree[o].m_position == removed_pos){
+                    leaf_node = tree[o];
+                    break;
+                }
+            }
             
+            for(int t=leaf_node.connected_buildings.Count-1; t>=0; t--)
+            {
+                Vector3Int removed_pos2 = leaf_node.connected_buildings[t];
+                MainTilemap.SetTile(removed_pos2 ,T_tiles[3]);
+
+                //del_road with c_node
+                del_road(removed_pos2 , leaf_node.m_position);
+                //del building
+                for(int j= tree.Count-1; j>=0; j--)
+                {
+                    if(tree[j].m_position == removed_pos2){
+                        Destroy(tree[j].gameObject);
+                        tree.RemoveAt(j);
+                    }
+                }
+
+                leaf_node.connected_buildings.RemoveAt(t);
+            }
+        
+        
             //del_road with c_node
             del_road(removed_pos , curr_node.m_position);
             //del building
