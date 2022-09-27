@@ -14,13 +14,14 @@ public class TreeManager : MonoBehaviour
     public int distance_of_cityhall = 5;
     public int distance_of_house = 4;
     public int distance_of_house2 = 3;
-    private Tree_building tmp;
+    private Tree_building tmp; // root
+    private Tree_building tmp_node = null;
     public Vector3Int cityhall_position = new Vector3Int(0,0,0);
 
     private List<Tree_building> tree = new List<Tree_building>();
     private bool on_build_button = false;
     private bool on_del_button = false;
-    private GameObject arrows;
+    private GameObject arrows , arrow_1, arrow_2, arrow_3, arrow_4;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,12 +31,17 @@ public class TreeManager : MonoBehaviour
         tmp.p_position = new Vector3Int(0,0,0);
         tree.Add(tmp); // root
         arrows = GameObject.Find("Tree_Arrows");
+        arrow_1 = GameObject.Find("LeftUp");
+        arrow_2 = GameObject.Find("RightDown");
+        arrow_3 = GameObject.Find("RightUp");
+        arrow_4 = GameObject.Find("LeftDown");
         arrows.SetActive(false);
     }
     void Update()
     {
         if(on_build_button)
-        {
+        {   
+            
             if(Input.GetMouseButtonDown(0))
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -45,6 +51,7 @@ public class TreeManager : MonoBehaviour
 
                 build_button(cellPos);
                 on_build_button = false;
+                //arrows.SetActive(false);
             }
         }
         if(on_del_button)
@@ -72,7 +79,6 @@ public class TreeManager : MonoBehaviour
 #region build
     public void build_button(Vector3Int cellPos)
     {
-        Tree_building tmp_node = null;
         
         if(MainTilemap.GetTile(cellPos).name != "white")
         {
@@ -81,8 +87,8 @@ public class TreeManager : MonoBehaviour
         }
         //arrow active
         arrows.transform.position = grid.GetCellCenterWorld(cellPos)+new Vector3(0f,0.45f,0f);
+        //arrows.SetActive(true);
         arrows.SetActive(true);
-
 
         //search tmp node
         for(int i=0; i<tree.Count; i++)
@@ -97,8 +103,17 @@ public class TreeManager : MonoBehaviour
             Debug.Log("더이상 자식노드를 추가할 수 없습니다.");
             return;
         }
+        if(tmp_node.name == "Tree_house2(Clone)")
+        {
+            Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
+            buttons_active();
+            arrows.SetActive(false);
+            return;
+        }
         //build instance
-        build(tmp_node);
+        //build(tmp_node);
+        build_arrow(tmp_node);
+        
         //exit
     }
 
@@ -123,7 +138,7 @@ public class TreeManager : MonoBehaviour
         }   
         }
     }
-
+/*
     private void build(Tree_building tmp)        //좌상단 0 1 0 우하단 0 -1 0 우상단 1 0 0 좌하단 -1 0 0
     {
         Vector3Int install_position = new Vector3Int(0,0,0);
@@ -209,6 +224,218 @@ public class TreeManager : MonoBehaviour
 
         build_road(tmp.m_position , install_position);
     }
+*/
+    private void buttons_active()
+    {
+        arrow_1.SetActive(true);
+        arrow_2.SetActive(true);
+        arrow_3.SetActive(true);
+        arrow_4.SetActive(true);
+    }
+    private void build_arrow(Tree_building tmp2)
+    {
+        // int count = 0;
+        if(MainTilemap.GetTile(tmp2.m_position + new Vector3Int(0 , 1 ,0)).name != "ground")
+        {
+            arrow_1.SetActive(false);
+        }
+        if(MainTilemap.GetTile(tmp2.m_position + new Vector3Int(0 , -1 ,0)).name != "ground")
+        {
+            arrow_2.SetActive(false);
+        }
+        if(MainTilemap.GetTile(tmp2.m_position + new Vector3Int(1 , 0 ,0)).name != "ground")
+        {
+            arrow_3.SetActive(false);
+        }
+        if(MainTilemap.GetTile(tmp2.m_position + new Vector3Int(-1 , 0 ,0)).name != "ground")
+        {
+            arrow_4.SetActive(false);
+        }
+        // if(count == 4) return -1;
+        // else return 0;
+    }
+
+    public void build_LeftUp()
+    {
+        Vector3Int install_position = new Vector3Int(0,0,0);
+        if(tmp_node.name == "Tree_cityhall(Clone)") 
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , distance_of_cityhall ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[1], grid.GetCellCenterWorld(install_position)+new Vector3(0f,0.3f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = cityhall_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_wardoffice(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , distance_of_house ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[2], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_house(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , distance_of_house2 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[3], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else{ //tmp name == Tree_house
+            Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
+            buttons_active();
+            arrows.SetActive(false);
+            return;
+        }
+
+        build_road(tmp_node.m_position , install_position);
+        buttons_active();
+        arrows.SetActive(false);
+    }
+
+    public void build_LeftDown()
+    {
+        Vector3Int install_position = new Vector3Int(0,0,0);
+        if(tmp_node.name == "Tree_cityhall(Clone)") 
+        {
+            install_position = tmp_node.m_position + new Vector3Int(-distance_of_cityhall , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[1], grid.GetCellCenterWorld(install_position)+new Vector3(0f,0.3f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = cityhall_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_wardoffice(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(-distance_of_house , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[2], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_house(Clone)")
+        { 
+            install_position = tmp_node.m_position + new Vector3Int(-distance_of_house2 , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[3], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else{ //tmp name == Tree_house
+            Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
+            buttons_active();
+            arrows.SetActive(false);
+            return;
+        }
+
+        build_road(tmp_node.m_position , install_position);
+        buttons_active();
+        arrows.SetActive(false);
+    }
+
+    public void build_RightUp()
+    {
+        Vector3Int install_position = new Vector3Int(0,0,0);
+        if(tmp_node.name == "Tree_cityhall(Clone)") 
+        {
+            install_position = tmp_node.m_position + new Vector3Int(distance_of_cityhall , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[1], grid.GetCellCenterWorld(install_position)+new Vector3(0f,0.3f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = cityhall_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_wardoffice(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(distance_of_house , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[2], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_house(Clone)")
+        { 
+            install_position = tmp_node.m_position + new Vector3Int(distance_of_house2 , 0 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[3], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else{ //tmp name == Tree_house
+            Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
+            buttons_active();
+            arrows.SetActive(false);
+            return;
+        }
+
+        build_road(tmp_node.m_position , install_position);
+        buttons_active();
+        arrows.SetActive(false);
+    }
+    
+
+    public void build_RightDown()
+    {
+        Vector3Int install_position = new Vector3Int(0,0,0);
+        if(tmp_node.name == "Tree_cityhall(Clone)") 
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , -distance_of_cityhall ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[1], grid.GetCellCenterWorld(install_position)+new Vector3(0f,0.3f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = cityhall_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_wardoffice(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , -distance_of_house ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[2], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else if(tmp_node.name == "Tree_house(Clone)")
+        {
+            install_position = tmp_node.m_position + new Vector3Int(0 , -distance_of_house2 ,0);
+            Tree_building installing_node = Instantiate(tree_buildings_sprites[3], grid.GetCellCenterWorld(install_position)+new Vector3(0f,-0.18f,0f), Quaternion.identity).GetComponent<Tree_building>();
+            MainTilemap.SetTile(install_position, T_tiles[0]);
+            installing_node.m_position = install_position;
+            installing_node.p_position = tmp_node.m_position;
+            tree.Add(installing_node);
+            tmp_node.connected_buildings.Add(install_position);
+        }
+        else{ //tmp name == Tree_house
+            Debug.Log("리프노드에는 자식노드를 추가할 수 없습니다");
+            buttons_active();
+            arrows.SetActive(false);
+            return;
+        }
+
+        build_road(tmp_node.m_position , install_position);
+        buttons_active();
+        arrows.SetActive(false);
+    }
+
 
     private void build_road(Vector3Int start, Vector3Int end)
     {
@@ -228,6 +455,7 @@ public class TreeManager : MonoBehaviour
         {
             MainTilemap.SetTile((start+(unit_vec*i)) , road_type);
         }
+        //buttons_active();
     }
 #endregion build
 
