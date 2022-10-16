@@ -2726,10 +2726,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877cdf3693dd6874ea8b1c13471b1132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveOn: 0
-  speed: 2
-  boxes: {fileID: 0}
-  targetpos: {x: 0, y: 0, z: 0}
+  move_on: 0
+  move_speed: 2
+  boxes:
+  - {fileID: 0}
 --- !u!1 &1406027503
 GameObject:
   m_ObjectHideFlags: 0
@@ -3724,7 +3724,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1337843714}
-        m_MethodName: move
+        m_MethodName: animation_move
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
