@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 132575326}
   - component: {fileID: 132575325}
+  - component: {fileID: 132575327}
   m_Layer: 0
   m_Name: box8
   m_TagString: Untagged
@@ -436,6 +437,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &132575327
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132575324}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 66b84750982ac634199d641f4a9decc4, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 66b84750982ac634199d641f4a9decc4, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &238321724
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,6 +463,7 @@ GameObject:
   m_Component:
   - component: {fileID: 238321726}
   - component: {fileID: 238321725}
+  - component: {fileID: 238321727}
   m_Layer: 0
   m_Name: box4
   m_TagString: Untagged
@@ -518,6 +536,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &238321727
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 238321724}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 3b7b413b50d078249a72305104ea1541, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 3b7b413b50d078249a72305104ea1541, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &239877556
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,6 +856,7 @@ GameObject:
   m_Component:
   - component: {fileID: 466377451}
   - component: {fileID: 466377450}
+  - component: {fileID: 466377452}
   m_Layer: 0
   m_Name: box2
   m_TagString: Untagged
@@ -894,6 +929,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &466377452
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 466377449}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 307a4049bfed70c42889d9cce0c6d977, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 307a4049bfed70c42889d9cce0c6d977, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &500491274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1489,6 +1540,7 @@ GameObject:
   m_Component:
   - component: {fileID: 894896631}
   - component: {fileID: 894896630}
+  - component: {fileID: 894896632}
   m_Layer: 0
   m_Name: box6
   m_TagString: Untagged
@@ -1561,6 +1613,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &894896632
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894896629}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 17f1d76e415bfb64cae3919bde4e174f, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 17f1d76e415bfb64cae3919bde4e174f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &911579580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1749,6 +1817,7 @@ GameObject:
   m_Component:
   - component: {fileID: 993017518}
   - component: {fileID: 993017517}
+  - component: {fileID: 993017519}
   m_Layer: 0
   m_Name: box3
   m_TagString: Untagged
@@ -1821,6 +1890,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &993017519
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993017516}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 2a1d1cf9639a73044803f2e76650049e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 2a1d1cf9639a73044803f2e76650049e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1036274676
 GameObject:
   m_ObjectHideFlags: 0
@@ -2726,10 +2811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 877cdf3693dd6874ea8b1c13471b1132, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  move_on: 0
   move_speed: 2
-  boxes:
-  - {fileID: 0}
 --- !u!1 &1406027503
 GameObject:
   m_ObjectHideFlags: 0
@@ -2740,6 +2822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1406027505}
   - component: {fileID: 1406027504}
+  - component: {fileID: 1406027506}
   m_Layer: 0
   m_Name: box1
   m_TagString: Untagged
@@ -2812,6 +2895,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &1406027506
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406027503}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 2bf6428360cc7eb41b6822b90662f194, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 2bf6428360cc7eb41b6822b90662f194, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1407057515
 GameObject:
   m_ObjectHideFlags: 0
