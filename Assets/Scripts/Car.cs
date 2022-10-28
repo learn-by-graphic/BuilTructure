@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Threading;
-
+using TMPro;
+using UnityEngine.UI;
 
 
 public class Car : MonoBehaviour
 {
+    public GameObject complete;
+    private AudioSource completeSound;
     public Sprite[] spriteArray;
     public Tilemap DarkMap;
     public Tile WhiteTile;
@@ -15,17 +18,18 @@ public class Car : MonoBehaviour
     Tilemap Road;
     SpriteRenderer spriteRenderer;
     public bool flag = false;
-    
+
     // Start is called before the first frame update
     void Start()
     {
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         Road = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
-        DarkMap.SetTile(dstpoint, WhiteTile);
+        //DarkMap.SetTile(dstpoint, WhiteTile);
         //시작위치 시야
         Vector3Int cellPosition = Road.WorldToCell(transform.position);
         DarkMap.SetTile(cellPosition, WhiteTile);
+        completeSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -71,6 +75,8 @@ public class Car : MonoBehaviour
         if (cellPosition == dstpoint)
         {
             Debug.Log("도착");
+            complete.SetActive(true);
+            completeSound.Play();
             return;
         }
 
