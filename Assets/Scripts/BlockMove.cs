@@ -76,11 +76,21 @@ public class BlockMove : MonoBehaviour
                 }
             case 5:
                 {
-                    Debug.Log("Queue에 Push 완료! 개수: " + (arrIndex+1));
+                    //Push가 다 끝난 경우에만 POP 누를 수 있게
+                    if ((arrIndex+1)== GameObject.Find("FillArea").GetComponent<Queue_commands>().count)
+                    {
+                        Debug.Log("모든 블록 PUSH 성공! 개수: " + (arrIndex + 1));
+                        GameObject.Find("FillArea").GetComponent<Queue_commands>().popflag = true;
+                    } else
+                    {
+                        Debug.Log("블록 한 개 PUSH 성공. 아직 PUSH 진행 중. 개수: " + (arrIndex + 1));
+                    }
                     break;
                 }
             case 6:
                 {
+                    //GameObject.Find("FillArea").GetComponent<Queue_commands>().QueueOut();
+                    GameObject.Find("FillArea").GetComponent<Queue_commands>().OneBlockDone();
                     Destroy(gameObject);
                     break;
                 }
@@ -107,11 +117,11 @@ public class BlockMove : MonoBehaviour
             else if(isStart == 4)
             {
                 m_Speed = 450.0f;  //450
-                m_HeightArc = 300.0f;
+                m_HeightArc = 450.0f;
             } else if (isStart == 6)
             {
-                m_Speed = 350.0f;  //450
-                m_HeightArc = 600.0f;
+                m_Speed = 700.0f;  //450
+                m_HeightArc = -300.0f;
 
                 transform.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
                 GameObject image = transform.Find("Image").gameObject;

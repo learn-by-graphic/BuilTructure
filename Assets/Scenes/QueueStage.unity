@@ -4129,7 +4129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 920, y: -621}
+  m_AnchoredPosition: {x: 864, y: 678.19}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &690669397
@@ -12930,6 +12930,7 @@ MonoBehaviour:
   prefab: {fileID: 0}
   Parent: {fileID: 0}
   car: {fileID: 0}
+  buttonflag: 1
 --- !u!114 &2052878034
 MonoBehaviour:
   m_ObjectHideFlags: 0

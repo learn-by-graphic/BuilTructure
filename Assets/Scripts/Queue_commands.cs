@@ -12,7 +12,7 @@ public class Queue_commands : MonoBehaviour
     private Vector2 create_point;
     private RectTransform rect_obj , Parent_rect;
 
-    private static int count = 0;
+    public int count = 0;
     private int size = 20; // width 에 따라 변경?
 
     private GameObject[] queue; // 0 :up , 1: right , 2: left , 3: down
@@ -20,6 +20,9 @@ public class Queue_commands : MonoBehaviour
     GameObject FillArea;    //스택을 담을 공간
     float FillAreaWidth;    //공간의 너비
     Vector3 entrancePos;    //스택 통의 꼭대기 (입구의 Y좌표)
+
+    public bool popflag = true;      //블록을 넣고 있거나 빼내는 동안 (=큐 통에 움직임이 있는 동안) 빼내기 불가
+    bool pushflag = true;     //블록을 Queue에서 빼내는 동안에는 Insert 불가능. Insert가 가능한지 체크
 
     void Awake()
     {
@@ -33,22 +36,40 @@ public class Queue_commands : MonoBehaviour
         FillAreaWidth = FillArea.GetComponent<RectTransform>().rect.width;           //스택 통의 전체 길이      (896)
 
     }
+
+    //Queue에 넣을 방향 블록 클릭
     public void createBlock(string blockName, int prefabIndex)
     {
-        count++;
-        queue[count-1] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
-        //프리팹 크기 조정
-        queue[count-1].GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
-        GameObject image = queue[count-1].transform.Find("Image").gameObject;
-        image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
-        //프리팹 좌표 조정
-        Vector3 startVec = GameObject.Find("StartInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-        Vector3 arriveVec = GameObject.Find("DstInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-        queue[count-1].GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
-        //프리펩에 무브 함수 달아서 궤적 이동 출발
-        queue[count-1].AddComponent<BlockMove>();
-        queue[count-1].GetComponent<BlockMove>().letsMove(4, startVec, arriveVec, blockName, count - 1);
+        popflag = false;
+        if (pushflag)
+        {
+            if (count < size)
+            {
+                count++;
+                queue[count - 1] = Instantiate(Resources.Load<GameObject>("StackPrefabs/" + blockName), new Vector3(0, 0, 0), Quaternion.identity, GameObject.Find("Canvas").transform);
+                //프리팹 크기 조정
+                queue[count - 1].GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
+                GameObject image = queue[count - 1].transform.Find("Image").gameObject;
+                image.GetComponent<RectTransform>().sizeDelta = new Vector2(40, 60);
+                //프리팹 좌표 조정
+                Vector3 startVec = GameObject.Find("StartInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+                Vector3 arriveVec = GameObject.Find("DstInArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+                queue[count - 1].GetComponent<RectTransform>().anchoredPosition3D = startVec;     //프리펩 생성 위치 (궤적 이동 시작 위치)
+                                                                                                  //프리펩에 무브 함수 달아서 궤적 이동 출발
+                queue[count - 1].AddComponent<BlockMove>();
+                queue[count - 1].GetComponent<BlockMove>().letsMove(4, startVec, arriveVec, blockName, count - 1);
 
+            }
+            else        //queue 최대 개수 가득 참
+            {
+                Debug.Log("QUEUE가 가득 참");
+            }
+        }
+        else
+        {
+            Debug.Log("Queue에서 블록을 빼내는 동안 Insert 불가능");
+        }
+        
     }
     public void BlockToQueue(GameObject block, int arrIndex)      //블록이 큐로 들어온 이후
     {
@@ -68,9 +89,33 @@ public class Queue_commands : MonoBehaviour
         block.AddComponent<BlockMove>();
         block.GetComponent<BlockMove>().letsMove(5, entrancePos, ArrivePos, arrIndex);
     }
-    public void BtnOnClicked()      //꺼내는 버튼 눌렀을 때
+
+    //Queue에서 빼내기 위한 버튼 클릭
+    public void BtnOnClicked()      //버튼 클릭시
     {
+        //QUEUE 비어 있는 지 먼저 체크
         if (count > 0)
+        {
+            if (popflag)    //POP 가능 할 때  
+            {
+                pushflag = false;
+                QueueOut();
+            }
+            else            //Push나 Pop이 안끝나서 아직 블록 움직이는 중 일 때
+            {
+                Debug.Log("PUSH 또는 POP 진행 중. POP 버튼 불가!!");
+            }
+        }
+        else        
+        {
+            Debug.Log("현재 QUEUE : EMPTY");
+        }
+    }
+    //Queue에서 맨 앞 블록 제거 하기
+    public void QueueOut()
+    {
+        popflag = false;
+        if (count > 0) 
         {
             count--;
             //카 무브
@@ -89,24 +134,37 @@ public class Queue_commands : MonoBehaviour
                     car.GetComponent<Car_Queue>().carMoveDown();
                     break;
             }
-            
-            //젤 앞에 꺼 버리는 궤적 이동
-            Vector3 startVec = GameObject.Find("StartOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-            Vector3 arriveVec = GameObject.Find("DstOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
-            queue[0].transform.SetParent(GameObject.Find("Canvas").transform);
-            queue[0].GetComponent<RectTransform>().anchoredPosition3D = startVec;
-            queue[0].GetComponent<BlockMove>().letsMove(6, startVec, arriveVec);
-            //***필요하면 크기 조정
+
+            GameObject outqueue = queue[0];
+            System.Array.Clear(queue, 0, 1);
             //큐 정렬 (옆으로 한칸씩 이동)
             for (int i = 0; i < count; i++)
             {
                 queue[i] = queue[i + 1];
                 queue[i].GetComponent<RectTransform>().anchoredPosition3D += new Vector3(44, 0, 0);
             }
+
+            //젤 앞에 꺼 버리는 궤적 이동
+            Vector3 startVec = GameObject.Find("StartOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            Vector3 arriveVec = GameObject.Find("DstOutArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
+            outqueue.transform.SetParent(GameObject.Find("Canvas").transform);
+            outqueue.GetComponent<RectTransform>().anchoredPosition3D = startVec;
+            outqueue.GetComponent<BlockMove>().letsMove(6, startVec, arriveVec, count);
+        }
+        else //다 빼낸 경우
+        {
+            popflag = true;
+            pushflag = true;
+            Debug.Log("Queue에 있는 블록 다 빼냄!");
+            return;
         }
     }
-    
-
+    //블록 하나 POP 끝나면 다음 블록 꺼내기 POP 호출
+    public void OneBlockDone()  
+    {
+        QueueOut();
+        return;
+    }
     public void move_car()
     {
         int i = 0;
