@@ -111,16 +111,16 @@ public class BlockMove : MonoBehaviour
         {
             if (isStart == 1)
             {
-                m_Speed = 1000.0f;  //450
+                m_Speed = 2000.0f;  //450
                 m_HeightArc = -150.0f;
             }
             else if(isStart == 4)
             {
-                m_Speed = 450.0f;  //450
+                m_Speed = 900.0f;  //450
                 m_HeightArc = 450.0f;
             } else if (isStart == 6)
             {
-                m_Speed = 700.0f;  //450
+                m_Speed = 1400.0f;  //450
                 m_HeightArc = -300.0f;
 
                 transform.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
@@ -145,7 +145,7 @@ public class BlockMove : MonoBehaviour
             }
         } else if(isStart == 2 || isStart == 5)
         {
-            m_Speed = 1000.0f;
+            m_Speed = 2000.0f;
             Vector3 TransVec = transform.GetComponent<RectTransform>().anchoredPosition3D;
             float x0 = startpos.x;
             float x1 = targetpos.x;
@@ -164,7 +164,7 @@ public class BlockMove : MonoBehaviour
             if (!newmoveflag)       //현 위치에서 스택 꼭대기로 이동
 
             {
-                m_Speed = 500.0f;
+                m_Speed = 1000.0f;
                 Vector3 TransVec = transform.GetComponent<RectTransform>().anchoredPosition3D;
                 float x0 = startpos.x;
                 float x1 = targetpos.x;
@@ -193,7 +193,7 @@ public class BlockMove : MonoBehaviour
             }
             else                 //스택 꼭대기 -> 밖으로 이동
             {
-                m_Speed = 1000.0f;
+                m_Speed = 2000.0f;
 
                 Vector3 newStartPos = GameObject.Find("DstPosOfArcmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
                 Vector3 newTargetPos = GameObject.Find("DstPosOfPopmove").transform.GetComponent<RectTransform>().anchoredPosition3D;
