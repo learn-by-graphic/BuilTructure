@@ -20,7 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/4_TreeScene.unity
     guid: 913a635bedf509c4881765612ee742e3
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/5_BfsScene.unity
     guid: bb11d3d42de01084c88505ee7713e4f4
   m_configObjects: {}

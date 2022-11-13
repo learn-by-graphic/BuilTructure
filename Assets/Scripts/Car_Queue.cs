@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Threading;
+using UnityEngine.SceneManagement;
 
 
 
 public class Car_Queue : MonoBehaviour
 {
+    public GameObject complete;
+    public GameObject warning;
+    private AudioSource completeSound;
     public Sprite[] spriteArray;
     Vector3Int dstpoint;
     Tilemap Road;
@@ -19,6 +23,7 @@ public class Car_Queue : MonoBehaviour
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         Road = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
+        completeSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -31,7 +36,7 @@ public class Car_Queue : MonoBehaviour
     {
         GameObject dstPoint = GameObject.Find("DstPoint");
         Vector3Int dstCellp = Road.WorldToCell(dstPoint.transform.position);
-
+        
         return dstCellp;
     }
 
@@ -51,7 +56,9 @@ public class Car_Queue : MonoBehaviour
         if (!Road.HasTile(cellPosition))
         {
             cellPosition -= vec * steps;
+            warning.SetActive(true);
             Debug.Log("이동불가");
+            completeSound.Play();
             return;
         }
         setSprite(cellPosition, vec);
@@ -62,6 +69,8 @@ public class Car_Queue : MonoBehaviour
         if (cellPosition == dstpoint)
         {
             Debug.Log("도착");
+            complete.SetActive(true);
+            completeSound.Play();
             return;
         }
 

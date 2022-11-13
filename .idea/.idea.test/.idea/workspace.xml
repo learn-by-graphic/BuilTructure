@@ -3,15 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="ebccc2f5-cae8-43c8-9cb8-bdac903d37a2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.test/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.test/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Isometric City Pack/Sprites/Landscape tiles/New Palette.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Isometric City Pack/Sprites/Landscape tiles/New Palette.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SceneManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SceneManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/0_MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/0_MainScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/1_StackScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/1_StackScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/2_QueueScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/2_QueueScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/3_GraphScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/3_GraphScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/4_TreeScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/4_TreeScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/5_BfsScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/5_BfsScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BlockMove.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BlockMove.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GridBuildingSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GridBuildingSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/dragIndicator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/dragIndicator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/BfsScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/BfsScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Car_Queue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Car_Queue.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/DoHyeon-Regular SDF.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TextMesh Pro/Fonts/DoHyeon-Regular SDF.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -102,6 +104,8 @@
       <workItem from="1668336069858" duration="70000" />
       <workItem from="1668336259563" duration="19000" />
       <workItem from="1668336657452" duration="359000" />
+      <workItem from="1668344539073" duration="1000" />
+      <workItem from="1668344563170" duration="5491000" />
     </task>
     <servers />
   </component>

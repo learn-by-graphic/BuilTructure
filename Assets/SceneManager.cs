@@ -9,4 +9,10 @@ public class SceneManager : MonoBehaviour
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(a);
     }
+
+    public void reload(GameObject popup)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        popup.SetActive(false);
+    }
 }
