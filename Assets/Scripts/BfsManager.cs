@@ -54,9 +54,12 @@ public class BfsManager : MonoBehaviour
             Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             cellPos = grid.LocalToCell(touchPos);
             
-            Debug.Log(cellPos);
+
+
             if(cellPos == root_position)
-            {
+            {                   
+                btn_yellow.SetActive(false);
+                btn_green.SetActive(false);
                 greenMask.SetActive(true);
                 current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
                 if(phase_count == 0) 
@@ -68,6 +71,7 @@ public class BfsManager : MonoBehaviour
             {
                 greenTR[0].SetActive(true);
                 current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
+                btn_yellow.SetActive(false);
                 btn_green.SetActive(true);
             }
             else if(phase_count >= 1 && cellPos == new Vector3Int(-1,4,0))
@@ -75,23 +79,37 @@ public class BfsManager : MonoBehaviour
                 greenTL[0].SetActive(true);
                 current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
                 btn_green.SetActive(true);
+                btn_yellow.SetActive(false);
             }
             else if(phase_count >= 1 && cellPos == new Vector3Int(-1,-6,0))
             {
                 greenBR[0].SetActive(true);
                 current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
                 btn_green.SetActive(true);
+                btn_yellow.SetActive(false);
             }
             else if(phase_count >= 1 && cellPos == new Vector3Int(-6,-1,0))
             {
                 greenBL[0].SetActive(true);
                 current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
                 btn_green.SetActive(true);
+                btn_yellow.SetActive(false);
+            }
+            else if(cellPos == new Vector3Int(11,5,0))
+            {
+                Debug.Log("clear!");
+                current_pos.transform.position = grid.GetCellCenterWorld(cellPos);
+                btn_yellow.SetActive(false);
+                btn_green.SetActive(false);
             }
             else if(phase_count == 2){
                   last_phase(cellPos);
             }
-            
+            else{
+                phase_count = checkphase(phase_count, cellPos);
+                btn_yellow.SetActive(false);
+                return;
+            }
 
             phase_count = checkphase(phase_count, cellPos);
             //Debug.Log(phase_count);
@@ -109,7 +127,8 @@ public class BfsManager : MonoBehaviour
             }
             else{
                 if(!((cell == new Vector3Int(4,-1,0)) || (cell == new Vector3Int(-1,4,0)) || (cell == new Vector3Int(-1,-6,0)) || (cell == new Vector3Int(-6,-1,0)) ||(cell == root_position))){
-                    Debug.Log("BFS 순서를 지켜주세요");
+                    Debug.Log("BFS 순서를 지켜주세요(이동불가)");
+                    
                 }
                 return 1;
             }
@@ -132,60 +151,76 @@ public class BfsManager : MonoBehaviour
             greenTR[1].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(8,-5,0))
         {
             greenTR[2].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+ 
         }
         else if(pos == new Vector3Int(3,8,0))
         {
             greenTL[1].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(-5,8,0))
         {
             greenTL[2].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+ 
         }
         else if(pos == new Vector3Int(-5,-10,0))
         {
             greenBR[1].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(3,-10,0))
         {
             greenBR[2].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(-5,-6,0))
         {
             greenBR[3].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(-10,3,0))
         {
             greenBL[1].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(-10,-5,0))
         {
             greenBL[2].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
         }
         else if(pos == new Vector3Int(-6,3,0))
         {
             greenBL[3].SetActive(true);
             current_pos.transform.position = grid.GetCellCenterWorld(pos);
             btn_yellow.SetActive(true);
+
+        }
+        else{
+            btn_yellow.SetActive(false);
+            current_pos.transform.position = grid.GetCellCenterWorld(pos);
+            Debug.Log("back to root");
+            btn_green.SetActive(true);
         }
     }
 
@@ -193,6 +228,7 @@ public class BfsManager : MonoBehaviour
     {
         current_pos.transform.position = grid.GetCellCenterWorld(root_position);
         btn_green.SetActive(false);
+        btn_yellow.SetActive(false);
         
     }
     
@@ -216,11 +252,14 @@ public class BfsManager : MonoBehaviour
             btn_yellow.SetActive(false);
             btn_green.SetActive(true);
         }
-        else if(cellPos == new Vector3Int(-6,3,0) || cellPos == new Vector3Int(-10,3,0) || cellPos == new Vector3Int(-10,5,0))
+        else if(cellPos == new Vector3Int(-6,3,0) || cellPos == new Vector3Int(-10,3,0) || cellPos == new Vector3Int(-10,-5,0))
         {
             current_pos.transform.position = grid.GetCellCenterWorld(new Vector3Int(-6,-1,0));
             btn_yellow.SetActive(false);
             btn_green.SetActive(true);
+        }
+        else{
+            btn_yellow.SetActive(false);
         }
     }
 }
