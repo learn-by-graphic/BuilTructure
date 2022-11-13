@@ -53,11 +53,13 @@ public class GridBuildingSystem : MonoBehaviour
         
         for(int i = 0; i< Input.touchCount; i++)
         {
-            int touch = Input.GetTouch(i);
+            var touch = Input.GetTouch(i);
             if(touch.phase == TouchPhase.Began)
             {
                 if(EventSystem.current.IsPointerOverGameObject(touch.fingerId))
                 {
+                    prevPos = new Vector3Int(-3, 7, 0);
+                    prevtile = MainTilemap.GetTile(prevPos);
                     return;
                 }
             }
@@ -67,6 +69,8 @@ public class GridBuildingSystem : MonoBehaviour
             // Check if finger is over a UI element
             if (EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
             {
+                prevPos = new Vector3Int(-3, 7, 0);
+                prevtile = MainTilemap.GetTile(prevPos);
                 return;
             }
         }
@@ -103,7 +107,6 @@ public class GridBuildingSystem : MonoBehaviour
                 {
                     if (!temp.Placed)
                     {
- 
                         TempTilemap.SetTile(prevPos, null);
                         MainTilemap.SetTile(prevPos, prevtile);
                         Destroy(temp.gameObject);

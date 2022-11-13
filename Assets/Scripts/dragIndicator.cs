@@ -66,7 +66,7 @@ public class dragIndicator : MonoBehaviour
         }
         for(int i = 0; i< Input.touchCount; i++)
         {
-            int touch = Input.GetTouch(i);
+            var touch = Input.GetTouch(i);
             if(touch.phase == TouchPhase.Began)
             {
                 if(EventSystem.current.IsPointerOverGameObject(touch.fingerId))
