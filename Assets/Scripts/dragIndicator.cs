@@ -11,7 +11,7 @@ public class dragIndicator : MonoBehaviour
 
     private bool button_clicked = false;
     public GameObject graphmanager;
-
+    public GameObject escbtn;
 
     public GridLayout gridLayout;
     public Tilemap MainTilemap;
@@ -31,14 +31,14 @@ public class dragIndicator : MonoBehaviour
     private bool start_is_red = false;
     private TileBase start_envtile;
     private TileBase start_beforetile;
-
+    private bool esc = false;
     void Start()
     {
        
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (esc)
         {
             return_initial();
             if (start_is_red)
@@ -50,14 +50,20 @@ public class dragIndicator : MonoBehaviour
             cellPos_of_selectedTile.Clear();
             selectedTile.Clear();
             method_button.SetActive(true);
+            esc = false;
         }
         if (EventSystem.current.IsPointerOverGameObject(-1))
         {
             return;
         }
+        if(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ){
+            if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)){
+                return;
+            }
+        }
+        /*
         if (button_clicked)
         {        
-
             if (Input.GetMouseButtonDown(0))
             {
                 Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -144,8 +150,116 @@ public class dragIndicator : MonoBehaviour
                 //Debug.Log("terminated installing road");
             }
         }
+        */
+        if (button_clicked)
+        {
+        // Track a single touch as a direction control.
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                // Handle finger movements based on TouchPhase
+                switch (touch.phase)
+                {
+                    //When a touch has first been detected, change the message and record the starting position
+                    case TouchPhase.Began:
+                        Vector2 touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        Vector3Int cellPos = gridLayout.LocalToCell(touchPos);
+                        prevPos = cellPos;
+                        startPos = cellPos;
+
+                        start_beforetile = MainTilemap.GetTile(startPos);
+                        start_envtile = Env.GetTile(startPos);
+                        if ((start_beforetile.name == "white") && ReferenceEquals(start_envtile, null))
+                        {
+                            TempTilemap.SetTile(startPos, tiles[0]);
+                            MainTilemap.SetTile(startPos, null);
+                            //Debug.Log("start: " + startPos);
+                            cellPos_of_selectedTile.Add(startPos);
+                            selectedTile.Add(start_beforetile);
+                        }
+                        else
+                        {
+                            TempTilemap.SetTile(startPos, tiles[1]);
+                            MainTilemap.SetTile(startPos, null);
+                            button_clicked = false;
+                            method_button.SetActive(true);
+                            start_is_red = true;
+                            Debug.Log("Error(start is red) back to initial");
+                            Debug.Log("press esc key or install road button");
+                            escbtn.SetActive(true);
+                        }
+                        break;
+
+                    //Determine if the touch is a moving touch
+                    case TouchPhase.Moved:
+                        touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        cellPos = gridLayout.LocalToCell(touchPos);
+                        if(prevPos != cellPos && !is_already_path(cellPos))
+                        {
+                            draw_temptile(cellPos);
+
+                            cellPos_of_selectedTile.Add(cellPos);
+                        }
+                        else if(is_already_path(cellPos))
+                        {
+                            go_to_returning_point();
+                        }
+                        prevPos = cellPos;
+                        break;
+
+                    case TouchPhase.Ended:
+                        // Report that the touch has ended when it ends
+                        touchPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        cellPos = gridLayout.LocalToCell(touchPos);
+                        endPos = cellPos;
+                        TileBase endtile = selectedTile[selectedTile.Count-1];
+
+                        if(endtile.name != "white")
+                        {
+                            TempTilemap.SetTile(endPos, tiles[1]);
+                        }
+                        else
+                        {
+                            TempTilemap.SetTile(endPos, tiles[0]);
+                        }
+
+                        if(has_red_tile()) //white tile에 대한 조건 추가 필요(check_building_connection)
+                        {
+                            Debug.Log("Error(has red(yellow) tile) back to initial");
+                            Debug.Log("press esc key or install road button");
+                            escbtn.SetActive(true);
+                        }
+                        else if(has_diagonal_path())
+                        {
+                            Debug.Log("Error(has diagonal tile) back to initial");
+                            Debug.Log("press esc key or install road button");
+                            escbtn.SetActive(true);
+
+                        }
+                        else
+                        {
+                            //print_List_of_path();
+                            confirm_button.SetActive(true);
+                        }
+                        //need extra button => yes / no 
+                        
+                        // 최종 도로 설치시 초록도로를 -> 스프라이트로 변경 
+                        // 도로 설치 실패 or 거부의사 -> 타일들을 복귀 시킴 
+
+                        button_clicked = false;
+                        
+                        //Debug.Log("terminated installing road");
+                        break;
+                }
+            }
+        }
     }
 
+    public void esc_btn()
+    {
+        esc = true;
+        escbtn.SetActive(false);
+    }
     public void btn_click()
     {
         this.button_clicked = true;
@@ -400,6 +514,7 @@ public class dragIndicator : MonoBehaviour
             {
                 Debug.Log("Error(wrong vector)");
                 Debug.Log("press esc key or install road button");
+                escbtn.SetActive(true);
                 return;
             }
         }

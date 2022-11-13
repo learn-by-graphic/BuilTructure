@@ -15,17 +15,21 @@ public class GridBuildingSystem : MonoBehaviour
     public Tilemap MainTilemap;
     public Tilemap TempTilemap;
     public GameObject BtnGroup;
+    public GameObject ynBtnGroup;
     public Tilemap Env;
     public Tile[] tiles; //tiles 0: ground / 1: green / 2: red / 3: white
+    public GameObject graphmanager;
 
     private Building temp;
     private Vector3Int prevPos= new Vector3Int(-3,7,0);
     private BoundsInt prevArea;
     private TileBase prevtile;
     private TileBase envtile;
+    private TileBase ptile;
 
     private List<Building> buildings; 
     private bool destroy_building_button = false;
+    private bool no_btn = false;
     #region Unity Methods
 
     private void Awake()
@@ -45,7 +49,7 @@ public class GridBuildingSystem : MonoBehaviour
         // {
         //     return;
         // }
-        GameObject graphmanager = GameObject.Find("GraphManager");
+        graphmanager = GameObject.Find("GraphManager");
         
         if (Input.GetMouseButtonDown(0))
         {
@@ -73,11 +77,48 @@ public class GridBuildingSystem : MonoBehaviour
 
 
             }
+            //mouse
             if (EventSystem.current.IsPointerOverGameObject(-1))
             {
+                if(no_btn)
+                {
+                    if (!temp.Placed)
+                    {
+ 
+                        TempTilemap.SetTile(prevPos, null);
+                        MainTilemap.SetTile(prevPos, prevtile);
+                        Destroy(temp.gameObject);
+                    }
+                    BtnGroup.SetActive(true);
+                    no_btn = false;
+                    return;
+                }
                 prevPos = new Vector3Int(-3, 7, 0);
                 prevtile = MainTilemap.GetTile(prevPos);
                 return;
+            }
+            // touch
+            if(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ){
+                if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
+                {
+                    if(no_btn)
+                    {
+                        if (!temp.Placed)
+                        {
+    
+                            TempTilemap.SetTile(prevPos, null);
+                            MainTilemap.SetTile(prevPos, prevtile);
+                            Destroy(temp.gameObject);
+                        }
+                        BtnGroup.SetActive(true);
+                        no_btn = false;
+                        return;
+                    }
+                    prevPos = new Vector3Int(-3, 7, 0);
+                    prevtile = MainTilemap.GetTile(prevPos);
+                    return;
+                }
+                    
             }
 
             else if (!temp.Placed && temp)
@@ -98,6 +139,7 @@ public class GridBuildingSystem : MonoBehaviour
                     
                     prevPos = cellPos;
                     FollowBuilding();
+                    ynBtnGroup.SetActive(true);
                     
                 }
             }
@@ -129,17 +171,17 @@ public class GridBuildingSystem : MonoBehaviour
                 BtnGroup.SetActive(true);
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        else if (no_btn)
         {
-
 
             if (!temp.Placed)
             {
-                TempTilemap.SetTile(prevPos, null);
-                MainTilemap.SetTile(prevPos, prevtile);
+                TempTilemap.SetTile(temp.area.position, null);
+                MainTilemap.SetTile(temp.area.position, ptile);
                 Destroy(temp.gameObject);
             }
             BtnGroup.SetActive(true);
+            no_btn = false;
         }
 
     }
@@ -149,6 +191,26 @@ public class GridBuildingSystem : MonoBehaviour
     public void destroy_build_button()
     {
         this.destroy_building_button = true;
+
+    }
+
+    public void yesBtn()
+    {
+        if (temp.CanBePlaced())
+        {
+            temp.Place();
+            //buildings.Add(temp);
+            graphmanager.GetComponent<GraphManager>().AddBuilding(temp);
+            BtnGroup.SetActive(true);
+            ynBtnGroup.SetActive(false);
+        }
+
+    }
+    public void noBtn()
+    {
+        
+        no_btn = true;
+        ynBtnGroup.SetActive(false);
 
     }
 
@@ -193,6 +255,7 @@ public class GridBuildingSystem : MonoBehaviour
             MainTilemap.SetTile(temp.area.position, null);
         }
         prevArea = buildingArea;
+        ptile = prevtile;
     }
 
     public bool CanTakearea(BoundsInt area)
