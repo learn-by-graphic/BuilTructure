@@ -97,6 +97,7 @@ public class GridBuildingSystem : MonoBehaviour
                 prevtile = MainTilemap.GetTile(prevPos);
                 return;
             }
+            /*
             // touch
             if(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ){
                 if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId))
@@ -120,6 +121,7 @@ public class GridBuildingSystem : MonoBehaviour
                 }
                     
             }
+            */
 
             else if (!temp.Placed && temp)
             {

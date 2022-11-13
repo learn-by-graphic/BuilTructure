@@ -56,11 +56,13 @@ public class dragIndicator : MonoBehaviour
         {
             return;
         }
+        /*
         if(Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ){
             if(EventSystem.current.IsPointerOverGameObject(Input.touches[0].fingerId)){
                 return;
             }
         }
+        */
         /*
         if (button_clicked)
         {        
