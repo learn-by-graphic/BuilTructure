@@ -16,10 +16,12 @@ public class Car_Queue : MonoBehaviour
     Vector3Int dstpoint;
     Tilemap Road;
     SpriteRenderer spriteRenderer;
+    Vector3 startpoint;
 
     // Start is called before the first frame update
     void Start()
     {
+        startpoint = transform.position;    //자동차 시작 위치 좌표
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         Road = transform.parent.GetComponent<Tilemap>();
         dstpoint = getDstPoint();
@@ -40,6 +42,13 @@ public class Car_Queue : MonoBehaviour
         return dstCellp;
     }
 
+    //이동불가 될 때 초기 위치로 되돌리기
+    void carMoveToStartPoint()
+    {
+        transform.position = startpoint;            //자동차 시작 위치로
+        spriteRenderer.sprite = spriteArray[0];     //자동차 머리 방향 처음 방향대로
+    }
+
     void carMove(Vector3Int vec, int steps)
     {
         /*
@@ -57,8 +66,9 @@ public class Car_Queue : MonoBehaviour
         {
             cellPosition -= vec * steps;
             warning.SetActive(true);
-            Debug.Log("이동불가");
+            Debug.Log("이동불가"); 
             completeSound.Play();
+            carMoveToStartPoint();  //이동불가 되면 원위치로 
             return;
         }
         setSprite(cellPosition, vec);
