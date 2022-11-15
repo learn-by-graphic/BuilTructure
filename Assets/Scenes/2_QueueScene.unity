@@ -1494,7 +1494,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.001953125, y: -3.2210083}
+  m_AnchoredPosition: {x: 0.001953125, y: -3.2210693}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &140314829
@@ -1664,8 +1664,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC790\uB3D9\uCC28\uAC00 \uBB3C\uC5D0 \uBE60\uC9C8 \uBED4 \uD588\uC5B4\uC694!\n\uC548\uC804\uD558\uAC8C
-    \uB3C4\uCC29\uD560 \uC218 \uC788\uB3C4\uB85D \uC8FC\uC758\uD574\uC8FC\uC138\uC694\n"
+  m_text: "\uC790\uB3D9\uCC28\uAC00 \uBB3C\uC5D0 \uBE60\uC9C8 \uBED4 \uD588\uC5B4\uC694!\n\uC548\uC804\uD55C
+    \uAE38\uC744 \uB2E4\uC2DC \uCC3E\uC544\uBCFC\uAE4C\uC694?\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -2403,7 +2403,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.4000244, y: 0}
+  m_AnchoredPosition: {x: -1.3999023, y: 0}
   m_SizeDelta: {x: 788.20044, y: 494.82983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &269968131
@@ -2537,9 +2537,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774 \uD560\uC560\uBE44\uAC00 \uD0DC\uC6CC\uC904\uD14C\uB2C8 \uC5B4\uC11C
-    \uD0C0\uB77C!\n\uB3C4\uB85C\uAC00 \uC7A0\uAE30\uAE30 \uC804\uC5D0 \uC5B4\uC11C
-    \uAC74\uB108\uC790\uAD6C\uB098."
+  m_text: "\uB3C4\uB85C \uC77C\uBD80\uAC00 \uBB3C\uC5D0 \uC7A0\uACA8 \uC704\uD5D8\uD574\uC11C
+    \uB9D0\uC774\uC9C0..\n\uC606\uC790\uB9AC\uC5D0 \uD0C0\uC11C \uAC19\uC774 \uC548\uC804\uD55C
+    \uAE38\uC744 \uCC3E\uC544\uC904 \uC218 \uC788\uACA0\uB098?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -5586,7 +5586,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "\uBB3C\uC5D0 \uBE60\uC9C0\uC9C0 \uC54A\uACE0 \uAC74\uB108 \uAC08 \uC218
-    \uC788\uB3C4\uB85D\n\uC774\uC7A5\uB2D8\uC744 \uB3C4\uC640 \uC548\uC804\uD55C
+    \uC788\uB3C4\uB85D\n\uD560\uC544\uBC84\uC9C0\uB97C \uB3C4\uC640 \uC548\uC804\uD55C
     \uACBD\uB85C\uB97C \uC9C0\uC815\uD574\uBD10\uC694\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
@@ -5772,7 +5772,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 909.74, y: -324.98}
+  m_AnchoredPosition: {x: 967.75, y: -483.59}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &685454855
@@ -9142,7 +9142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB9C8\uC744 \uC774\uC7A5\uB2D8"
+  m_text: "\uB9C8\uC744 \uD560\uC544\uBC84\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -9839,7 +9839,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB9C8\uC744 \uC774\uC7A5\uB2D8"
+  m_text: "\uB9C8\uC744 \uD560\uC544\uBC84\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -10303,7 +10303,7 @@ MonoBehaviour:
   m_text: "\uC774\uB7EC\uD55C \uD050 \uAD6C\uC870\uC5D0 \uB370\uC774\uD130\uB97C
     \uC0BD\uC785\uD558\uB294 \uACFC\uC815\uC744 <#ff9130>enqueue</color>,\n\uAC00\uC7A5
     \uCC98\uC74C\uC5D0 \uC0BD\uC785\uD55C \uB370\uC774\uD130\uB97C \uC0AD\uC81C\uD558\uB294
-    \uACFC\uC815\uC744 <#ff9130>dequeue</color>\uC774\uB77C\uACE0 \uD569\uB2C8\uB2E4\n\r\n\n"
+    \uACFC\uC815\uC744 <#ff9130>dequeue</color>\uB77C\uACE0 \uD569\uB2C8\uB2E4\n\r\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -12082,9 +12082,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uBAA9\uC801\uC9C0\uC5D0 \uC548\uC804\uD558\uAC8C \uB3C4\uCC29\uD558\uBA74
-    \uC131\uACF5!\n\uC798\uBABB\uB41C \uC785\uB825\uC73C\uB85C \uAC15\uBB3C\uC5D0
-    \uBE60\uC9C0\uC9C0 \uC54A\uB3C4\uB85D \uC8FC\uC758\uD558\uC138\uC694."
+  m_text: "\uC544\uC2AC\uC544\uC2AC \uB3C4\uB85C\uB97C \uAC74\uB108 \uBC18\uB300\uD3B8\uC5D0
+    \uB3C4\uCC29\uD558\uBA74 \uC131\uACF5!\n\uC2E4\uC218\uB85C \uAC15\uBB3C\uC5D0
+    \uBE60\uC9C0\uC9C0 \uC54A\uB3C4\uB85D \uC8FC\uC758\uD574\uC57C\uD574\uC694"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -12620,7 +12620,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB9C8\uC744 \uC774\uC7A5\uB2D8"
+  m_text: "\uB9C8\uC744 \uD560\uC544\uBC84\uC9C0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -13304,7 +13304,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -723, y: -370.68}
+  m_AnchoredPosition: {x: -650.04, y: -422.34}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1411102106
@@ -15419,10 +15419,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC5EC\uAE34 \uBE44\uAC00 \uB9CE\uC774 \uC640\uC11C, \uAE38\uB4E4\uC774
-    \uC804\uBD80 \uBB3C\uC5D0 \uC7A0\uAE34 \uBAA8\uC591\uC774\uC57C.\n\uD55C \uAC00\uC9C0
-    \uAE38\uB9CC \uB0A8\uC558\uB294\uB370 \uC774\uAC83\uB3C4 \uACE7 \uBB3C\uC5D0
-    \uC7A0\uAE38\uAC70\uC57C!"
+  m_text: "\uAC70\uAE30 \uD559\uC0DD\uB3C4 \uAC74\uB108\uAC00\uB824\uB358 \uCC38\uC778\uAC00?
+    \n\uC9D1 \uC55E\uAE4C\uC9C0 \uD0DC\uC6CC\uB2E4 \uC904\uD14C\uB2C8, \uC774 \uD560\uC560\uBE44
+    \uC880 \uB3C4\uC640\uC8FC\uC9C0 \uC54A\uC73C\uB828?\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -18646,7 +18645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.4000244, y: 0}
+  m_AnchoredPosition: {x: -1.3999023, y: 0}
   m_SizeDelta: {x: 788.20044, y: 494.82983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1907039176
@@ -20395,8 +20394,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uC774\uBCF4\uAC8C \uD559\uC0DD!\n\uAC15 \uAC74\uB108 \uC9C0\uC5ED\uC73C\uB85C
-    \uB118\uC5B4\uAC00\uB824\uB358 \uCC38\uC778\uAC00?"
+  m_text: "\uD5C8\uD5C8.. \uC774\uAC83 \uCC38 \uB09C\uAC10\uD558\uAD6C\uB9CC\n\uAC15\uBB3C\uC774
+    \uB354 \uBD88\uC5B4\uB098\uAE30 \uC804\uC5D0 \uB9C8\uC744\uB85C \uAC74\uB108\uAC00\uC57C
+    \uD560\uD150\uB370.."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9b191bb757741d4baa530815d1ad291, type: 2}
   m_sharedMaterial: {fileID: -6385418232015023160, guid: a9b191bb757741d4baa530815d1ad291,
@@ -20488,6 +20488,7 @@ GameObject:
   - component: {fileID: 2052878034}
   - component: {fileID: 2052878033}
   - component: {fileID: 2052878037}
+  - component: {fileID: 2052878038}
   m_Layer: 0
   m_Name: FillArea
   m_TagString: Untagged
@@ -20530,7 +20531,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a962909d2effc840ba00820a37ea513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabs: []
   prefab: {fileID: 0}
   Parent: {fileID: 0}
   car: {fileID: 0}
@@ -20601,6 +20601,102 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.1764706}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!82 &2052878038
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052878031}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &2059101368
 GameObject:
   m_ObjectHideFlags: 0

@@ -121,7 +121,7 @@ public class BlockMove : MonoBehaviour
             } else if (isStart == 6)
             {
                 m_Speed = 1400.0f;  //450
-                m_HeightArc = -300.0f;
+                m_HeightArc = 300.0f;
 
                 transform.GetComponent<RectTransform>().sizeDelta = new Vector2(88, 88);
                 GameObject image = transform.Find("Image").gameObject;

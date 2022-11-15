@@ -10,6 +10,7 @@ public class Queue_commands : MonoBehaviour
     public GameObject car;
     private Vector2 create_point;
     private RectTransform rect_obj , Parent_rect;
+    private AudioSource completeSound;
 
     public int count = 0;
     private int size = 20; // width 에 따라 변경?
@@ -32,7 +33,7 @@ public class Queue_commands : MonoBehaviour
         //AtStack Method
         FillArea = GameObject.Find("FillArea");  //스택을 담을 공간
         FillAreaWidth = FillArea.GetComponent<RectTransform>().rect.width;           //스택 통의 전체 길이      (896)
-
+        completeSound = GetComponent<AudioSource>();
     }
 
     //Queue에 넣을 방향 블록 클릭
@@ -138,6 +139,7 @@ public class Queue_commands : MonoBehaviour
             count--;
             GameObject outqueue = queue[0];
             System.Array.Clear(queue, 0, 1);
+            completeSound.Play();
             //큐 정렬 (옆으로 한칸씩 이동)
             for (int i = 0; i < count; i++)
             {
