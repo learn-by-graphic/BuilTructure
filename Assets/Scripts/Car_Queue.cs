@@ -47,6 +47,7 @@ public class Car_Queue : MonoBehaviour
     {
         transform.position = startpoint;            //자동차 시작 위치로
         spriteRenderer.sprite = spriteArray[0];     //자동차 머리 방향 처음 방향대로
+
     }
 
     void carMove(Vector3Int vec, int steps)
@@ -69,6 +70,8 @@ public class Car_Queue : MonoBehaviour
             Debug.Log("이동불가"); 
             completeSound.Play();
             carMoveToStartPoint();  //이동불가 되면 원위치로 
+            GameObject.Find("FillArea").transform.GetComponent<Queue_commands>().CantMove();
+            
             return;
         }
         setSprite(cellPosition, vec);

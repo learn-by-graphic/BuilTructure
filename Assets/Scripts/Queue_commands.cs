@@ -5,7 +5,6 @@ using UnityEngine;
 //transform = Fillarea
 public class Queue_commands : MonoBehaviour
 {
-    public GameObject[] prefabs;
     public GameObject prefab;
     public GameObject Parent;
     public GameObject car;
@@ -28,7 +27,6 @@ public class Queue_commands : MonoBehaviour
     {
         //Car
         car = GameObject.Find("Car");
-        prefabs = new GameObject[4];
         queue = new GameObject[size];
 
         //AtStack Method
@@ -117,7 +115,6 @@ public class Queue_commands : MonoBehaviour
         popflag = false;
         if (count > 0) 
         {
-            count--;
             //카 무브
             switch (queue[0].tag)
             {
@@ -134,7 +131,11 @@ public class Queue_commands : MonoBehaviour
                     car.GetComponent<Car_Queue>().carMoveDown();
                     break;
             }
-
+            if (count == 0) return;     //car를 move했을 때 이동불가 뜨면 큐, count 초기화됨
+    
+            //이동 불가 아니어서 자동차는 움직인 후
+            //큐에서 그 방향 블록 빼기
+            count--;
             GameObject outqueue = queue[0];
             System.Array.Clear(queue, 0, 1);
             //큐 정렬 (옆으로 한칸씩 이동)
@@ -163,6 +164,21 @@ public class Queue_commands : MonoBehaviour
     public void OneBlockDone()  
     {
         QueueOut();
+        return;
+    }
+
+    public void CantMove()
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Destroy(queue[i]);      //블록 오브젝트 제거
+        }
+        System.Array.Clear(queue, 0, count);    //큐 비우기
+        count = 0;  //큐에 쌓인 개수 초기화
+
+        popflag = true;
+        pushflag = true;
+        Debug.Log("Queue 초기화!");
         return;
     }
     public void move_car()
@@ -203,7 +219,6 @@ public class Queue_commands : MonoBehaviour
             
         }
     }
-
     public void UpOnClicked()
     {
         if (count < 20)
